@@ -48,10 +48,10 @@ DbConnect().then(() => {
 
     // Serve Frontend (Move this to the bottom)
     const __dirname = path.resolve();
-    app.use(express.static(path.join(__dirname, "public")));
+    app.use(express.static(path.join(__dirname, "/frontend/dist")));
 
     app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "public", "index.html"));
+        res.sendFile(path.join(__dirname, "frontend","dist", "index.html"));
     });
 
     // Start Server
