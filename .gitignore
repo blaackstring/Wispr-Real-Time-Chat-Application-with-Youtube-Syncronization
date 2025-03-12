@@ -21,7 +21,7 @@ node_modules
 backend/.env
 frontend/.env
 frontend/node_modules
-dist
+
 
 # Logs
 logs/
@@ -31,10 +31,8 @@ pnpm-lock.yaml
 package-lock.json
 
 # Build files
-dist/
-public/dist/
-frontend/dist/
-backend/public/dist/
+
+
 
 # Editor and OS files
 .DS_Store
