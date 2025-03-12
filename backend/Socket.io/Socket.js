@@ -9,7 +9,7 @@ const server=http.createServer(app);
 
 const io=new Server(server,{
     cors:{
-        origin: [process.env.ORIGIN || "http://localhost:5173"],
+        origin: ["https://wispr-chatapp.onrender.com" || "http://localhost:5173"],
         methods:["GET","POST"]
     }
 }); 

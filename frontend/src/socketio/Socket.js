@@ -6,7 +6,7 @@ let sockets = null; //
 
 export const connectSocket = (userId) => {
     if (!sockets) {  // ✅ Prevent duplicate connections
-        sockets = io(SOCKET_URL, {
+        sockets = io("https://wispr-chatapp.onrender.com", {
             query: { userId },
             autoConnect: true,
             reconnection: true,
