@@ -48,14 +48,13 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       syncplaying.current=true;
       // Mark as external seek
       playerRef.current.pauseVideo();
-
       playerRef.current.seekTo(data, true);
-      playerRef.current.playVideo();
+      
       
       setTimeout(() => {
           isExternalSeek.current = false;
           syncplaying.current=true; // Reset after short delay
-      }, 500);
+      }, 700);
   };
   
     const syncUrl = (data) => {
@@ -135,6 +134,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
               let seekTime = playerRef.current.getCurrentTime();
                  playerRef.current.pauseVideo();
                 await  seeked(seekTime, idRef.current);
+               
             }
 
             if (event.data === 1) {
