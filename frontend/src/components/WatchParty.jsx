@@ -44,12 +44,13 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
     const syncSeek = (data) => {
       if (!idRef.current) return;
-  
-      // Mark as external seek
       isExternalSeek.current = true;
       syncplaying.current=true;
+      // Mark as external seek
+      playerRef.current.pauseVideo();
+
       playerRef.current.seekTo(data, true);
-     
+      playerRef.current.playVideo();
       
       setTimeout(() => {
           isExternalSeek.current = false;
@@ -132,6 +133,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
             if (event.data === YT.PlayerState.BUFFERING) {
               if (isExternalSeek.current) return;
               let seekTime = playerRef.current.getCurrentTime();
+                 playerRef.current.pauseVideo();
                 await  seeked(seekTime, idRef.current);
             }
 
