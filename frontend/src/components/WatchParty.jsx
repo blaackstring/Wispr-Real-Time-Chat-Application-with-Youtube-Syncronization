@@ -44,15 +44,13 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
     const syncSeek = (data) => {
       if (!idRef.current) return;
-     
+      isExternalSeek.current = true;
+      syncplaying.current=true;
+      // Mark as external seek
      
       playerRef.current.seekTo(data,false);
-      
-      
-      setTimeout(() => {
-        playerRef.current.playVideo()
-           
-      }, 1000);
+      playerRef.current.playVideo()
+      socket.off("play_pause", syncVideoState);
   };
   
     const syncUrl = (data) => {
