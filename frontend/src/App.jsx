@@ -33,7 +33,7 @@ function App() {
     navigate("/login"); 
   };
   return (
-    <div className="w-screen justify-center min-h-screen overflow-hidden flex bg-white/30 flex-col ">
+    <div className="w-screen justify-center h-full overflow-hidden flex bg-white/30 flex-col ">
       {/* Navbar */}
       <div className="w-screen flex  top-1 justify-center absolute">
       {!loginornot&&<nav className="min-w-[50%]  flex justify-around items-center backdrop-blur-md bg-white/10 rounded-xl lg:text-xl font-bold ">
