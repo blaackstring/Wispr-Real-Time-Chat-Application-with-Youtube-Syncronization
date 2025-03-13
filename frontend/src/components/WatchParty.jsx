@@ -57,14 +57,8 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const syncSeek = (data) => {
     console.log("Received seek point:", data);
     if (data && playerRef.current) {
-      const currentTime = playerRef.current.getCurrentTime();
-  
-      // Prevent repeated seeking at the same position
-    
-        playerRef.current.seekTo(data, true);
-        playerRef.current.playVideo();
-  
-        // Update last seek time
+        playerRef.current.seekTo(data, false);
+
     
       }
     }
