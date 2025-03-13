@@ -52,8 +52,10 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       
       
       setTimeout(() => {
+        playerRef.current.playVideo();
           isExternalSeek.current = false;
-          syncplaying.current=true; // Reset after short delay
+          syncplaying.current=true;
+           // Reset after short delay
       }, 700);
   };
   
@@ -132,7 +134,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
             if (event.data === YT.PlayerState.BUFFERING) {
               if (isExternalSeek.current) return;
               let seekTime = playerRef.current.getCurrentTime();
-                 playerRef.current.pauseVideo();
+                 
                 await  seeked(seekTime, idRef.current);
                
             }
