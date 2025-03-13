@@ -49,24 +49,18 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   }, [socket]);
 
   const syncVideoState = (data) => {
- 
+    if (!seekingRef.current) {
       console.log("Syncing play/pause:", data);
       setisplaying(data);
-    
+    }
   };
 
   const syncSeek = (data) => {
     console.log("Received seek point:", data);
     if (data && playerRef.current) {
       seekingRef.current = true;
-      new Promise((resolve) => {
-       
-        playerRef.current.seekTo(data, false);
-        playerRef.current.playVideo();
-        resolve(); // Resolve the promise after seeking
-    })
-    
-    setisplaying(true);
+      playerRef.current.seekTo(data, true); // Ensure `true` to force immediate seek
+      return setTimeout(() => (seekingRef.current = false), 1000); // Buffer time to avoid play/pause conflict
     }
   };
 
@@ -126,12 +120,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
         },
         events: {
           onReady: (event) => {
-            console.log("Player Ready");
-            if (!isplaying) {
-              event.target.pauseVideo();
-            } else {
               event.target.playVideo();
-            }
           },
           onStateChange: async (event) => {
             if (!idRef.current) return;
@@ -159,7 +148,15 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     }
   };
 
- 
+  useEffect(() => {
+    if (playerRef.current) {
+      if (isplaying) {
+        playerRef.current.playVideo();
+      } else {
+        playerRef.current.pauseVideo();
+      }
+    }
+  }, [isplaying]);
 
   const handleClose = () => {
     console.log("Closing Watch Party");
@@ -178,7 +175,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     <div className="wdiv min-h-screen w-[100vw] flex justify-center items-center overflow-hidden sm:h-[100vh] sm:p-6 md:p-8 lg:p-5 relative">
       <nav>
         <div className="w-[80vw] absolute top-0 left-10 flex items-center justify-center">
-          <div className="text-[#E50914] text-[30px] lg:text-4xl font-extrabold  text-center">Watch-Party</div>
+          <div className="text-[#E50914] text-[30px] lg:text-5xl font-extrabold  text-center">Watch-Party</div>
         </div>
         <button
           onClick={handleClose}
