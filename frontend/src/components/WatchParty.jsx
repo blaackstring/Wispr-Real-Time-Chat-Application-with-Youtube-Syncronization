@@ -11,10 +11,10 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const [isplaying, setisplaying] = useState(true);
   const [id, setId] = useState(null);
   const idRef = useRef(null);
-  const inputref=useRef()
+  const inputref = useRef();
   const playerRef = useRef(null);
+  const seekingRef = useRef(false);  // NEW: To track seeking state
   const selector = useSelector((state) => state.UserClickedSlice.user);
-  
 
   useEffect(() => {
     if (selector?.user?._id) {
@@ -37,8 +37,6 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   }, []);
 
   useEffect(() => {
-   
-
     socket.on("play_pause", syncVideoState);
     socket.on("seek", syncSeek);
     socket.on("send_url", syncUrl);
@@ -49,20 +47,22 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       socket.off("send_url", syncUrl);
     };
   }, [socket]);
+
   const syncVideoState = (data) => {
-    console.log("Syncing play/pause:", data);
-    setisplaying(data);
+    if (!seekingRef.current) {
+      console.log("Syncing play/pause:", data);
+      setisplaying(data);
+    }
   };
 
   const syncSeek = (data) => {
     console.log("Received seek point:", data);
     if (data && playerRef.current) {
-        playerRef.current.seekTo(data, false);
-
-    
-      }
+      seekingRef.current = true;
+      playerRef.current.seekTo(data, true); // Ensure `true` to force immediate seek
+      setTimeout(() => (seekingRef.current = false), 1000); // Buffer time to avoid play/pause conflict
     }
-  
+  };
 
   const syncUrl = (data) => {
     console.log("Syncing URL:", data);
@@ -95,8 +95,8 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       const res = await sendurl(url, idRef.current);
       const videoId = extractVideoId(url);
       setSenderUrlDataId(videoId);
-      setUrl(null)
-          inputref.current.value = '';
+      setUrl("");
+      inputref.current.value = "";
       createPlayer(videoId);
     } catch (error) {
       console.error("Error sending URL", error);
@@ -129,8 +129,12 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
           },
           onStateChange: async (event) => {
             if (!idRef.current) return;
+
+            // Prevent state change logic during seek
+            if (seekingRef.current) return;
+
             if (event.data === YT.PlayerState.BUFFERING) {
-              let seekTime = playerRef.current.getCurrentTime();
+              const seekTime = playerRef.current.getCurrentTime();
               seeked(seekTime, idRef.current);
             }
 
@@ -161,56 +165,54 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
   const handleClose = () => {
     console.log("Closing Watch Party");
-    inputref.current.value = '';
+    inputref.current.value = "";
     setSenderUrlDataId("");
     setisplaying(true);
     setiswatchparty(false);
 
     if (playerRef.current) {
-      playerRef.current.stopVideo(); // Stops the video
-      playerRef.current.loadVideoById(""); // Clears the loaded video but keeps the player
+      playerRef.current.stopVideo();
+      playerRef.current.loadVideoById("");
     }
   };
 
   return (
-    <div className="wdiv min-h-screen w-[100vw]  flex justify-center items-center overflow-hidden sm:h-[100vh] sm:p-6 md:p-8 lg:p-5 relative">
-     <nav>
-      <div className="w-[80vw] absolute top-0 left-10 flex items-center justify-center ">
-        <div className="text-[#E50914] text-[40px] lg:text-5xl font-extrabold mt-1 text-center">Watch-Party</div>
-      </div>
-     <button
-        onClick={handleClose}
-        className="absolute top-1 right-4 text-white text-3xl font-bold cursor-pointer bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
-      >
-        ✖
-      </button>
-     </nav>
+    <div className="wdiv min-h-screen w-[100vw] flex justify-center items-center overflow-hidden sm:h-[100vh] sm:p-6 md:p-8 lg:p-5 relative">
+      <nav>
+        <div className="w-[80vw] absolute top-0 left-10 flex items-center justify-center">
+          <div className="text-[#E50914] text-[40px] lg:text-5xl font-extrabold mt-1 text-center">Watch-Party</div>
+        </div>
+        <button
+          onClick={handleClose}
+          className="absolute top-1 right-4 text-white text-3xl font-bold cursor-pointer bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
+        >
+          ✖
+        </button>
+      </nav>
 
       <div className="flex w-screen-[85%] h-full flex-col items-center justify-items-center lg:flex-row p-4 overflow-hidden">
-        <div className="left mb-5 ">
-        <div className="w-full  mt-6 flex flex-col items-center space-y-4 px-4 sm:px-6 md:px-8">
-        <form onSubmit={handleForm} className="w-full flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
-          <input
-          ref={inputref}
-            type="text"
-            placeholder="Enter YouTube URL"
-            className="w-full p-2 rounded-lg border text-white bg-black/50 border-gray-400 focus:outline-none focus:border-blue-500"
-            onChange={handleInputChange}
-          />
-          <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition">
-            Search
-          </button>
-        </form>
+        <div className="left mb-5">
+          <div className="w-full mt-6 flex flex-col items-center space-y-4 px-4 sm:px-6 md:px-8">
+            <form onSubmit={handleForm} className="w-full flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+              <input
+                ref={inputref}
+                type="text"
+                placeholder="Enter YouTube URL"
+                className="w-full p-2 rounded-lg border text-white bg-black/50 border-gray-400 focus:outline-none focus:border-blue-500"
+                onChange={handleInputChange}
+              />
+              <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition">
+                Search
+              </button>
+            </form>
 
-        <div className=" max-w-[860px] lg:w-[890px] h-[250px] w-[300px] md:w-[450px] sm:h-[200px]  sm:w-[300px] md:h-[280px] lg:h-[500px] rounded-lg shadow-lg">
-          <div id="youtube-player" className="w-full h-full"></div>
-        </div>
-      </div>
+            <div className="max-w-[860px] lg:w-[890px] h-[250px] w-[300px] md:w-[450px] sm:h-[200px] sm:w-[300px] md:h-[280px] lg:h-[500px] rounded-lg shadow-lg">
+              <div id="youtube-player" className="w-full h-full"></div>
+            </div>
+          </div>
         </div>
         <Messagesmall socket={socket} />
       </div>
-
-
     </div>
   );
 }
