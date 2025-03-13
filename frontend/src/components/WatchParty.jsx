@@ -49,7 +49,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       isExternalSeek.current = true;
       syncplaying.current=true;
       playerRef.current.seekTo(data, true);
-      playerRef.current.playVideo();
+     
       
       setTimeout(() => {
           isExternalSeek.current = false;
