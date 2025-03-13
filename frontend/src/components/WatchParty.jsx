@@ -1,96 +1,57 @@
 import React, { useEffect, useRef } from "react";
 import { playorpaused, seeked, sendurl } from "@/Controllers/watchPartyController.js";
 import { useSelector } from "react-redux";
-import './watchparty.css';
+import "./watchparty.css";
 import Message from "./Message";
 import Messagesmall from "./Messagesmall";
 
 function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const urlRef = useRef("");
-  const senderUrlDataIdRef = useRef("");
+  const videoIdRef = useRef("");
   const isPlayingRef = useRef(true);
   const idRef = useRef(null);
   const inputRef = useRef();
   const playerRef = useRef(null);
-  const selector = useSelector((state) => state.UserClickedSlice.user);
   const isExternalSeek = useRef(false);
-  const syncplaying = useRef(false);
+  const isSyncingPlayback = useRef(false);
+  const isSeeking = useRef(false);
+
+  const selector = useSelector((state) => state.UserClickedSlice.user);
 
   useEffect(() => {
-    if (selector?.user?._id) {
-      idRef.current = selector.user._id;
-    }
+    idRef.current = selector?.user?._id;
   }, [selector]);
 
   useEffect(() => {
     if (!window.YT) {
-      const tag = document.createElement("script");
-      tag.src = "https://www.youtube.com/iframe_api";
-      tag.async = true;
-      document.body.appendChild(tag);
+      const script = document.createElement("script");
+      script.src = "https://www.youtube.com/iframe_api";
+      document.body.appendChild(script);
+      window.onYouTubeIframeAPIReady = () => console.log("YouTube API Ready");
     }
-
-    window.onYouTubeIframeAPIReady = () => {
-      console.log("YouTube API Ready");
-    };
   }, []);
 
   useEffect(() => {
-    const syncVideoState = (data) => {
-      console.log("Syncing play/pause:", data);
-      isPlayingRef.current = data;
-      togglePlayPause();
-    };
-
-    const syncSeek = (data) => {
-      if (!idRef.current) return;
-      isExternalSeek.current = true;
-      syncplaying.current=true;
-      // Mark as external seek
-      playerRef.current.pauseVideo();
-      playerRef.current.seekTo(data, true);
-      
-      
-      setTimeout(() => {
-        playerRef.current.playVideo();
-          isExternalSeek.current = false;
-          syncplaying.current=false;
-           // Reset after short delay
-      }, 700);
-  };
-  
-    const syncUrl = (data) => {
-      console.log("Syncing URL:", data);
-      const videoId = extractVideoId(data);
-      senderUrlDataIdRef.current = videoId;
-      createPlayer(videoId);
-    };
-
-    socket.on("play_pause", syncVideoState);
-    socket.on("seek", syncSeek);
-    socket.on("send_url", syncUrl);
+    socket.on("play_pause", handlePlayPauseSync);
+    socket.on("seek", handleSeekSync);
+    socket.on("send_url", handleUrlSync);
 
     return () => {
-      socket.off("play_pause", syncVideoState);
-      socket.off("seek", syncSeek);
-      socket.off("send_url", syncUrl);
+      socket.off("play_pause", handlePlayPauseSync);
+      socket.off("seek", handleSeekSync);
+      socket.off("send_url", handleUrlSync);
     };
   }, [socket]);
 
   const extractVideoId = (url) => {
-    const match = url.match(
-      /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
-    );
+    const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
     return match ? match[1] : "";
   };
 
-  const handleInputChange = (e) => {
-    urlRef.current = e.target.value;
-  };
+  const handleInputChange = (e) => (urlRef.current = e.target.value);
 
   const handleEvent = async (isPlaying) => {
-    if (!idRef.current) return;
-    await playorpaused(isPlaying, idRef.current);
+    if (idRef.current) await playorpaused(isPlaying, idRef.current);
   };
 
   const handleForm = async (e) => {
@@ -98,77 +59,83 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     if (!urlRef.current) return;
 
     try {
-      const res = await sendurl(urlRef.current, idRef.current);
       const videoId = extractVideoId(urlRef.current);
-      senderUrlDataIdRef.current = videoId;
-      urlRef.current = "";
-      inputRef.current.value = "";
+      videoIdRef.current = videoId;
+      await sendurl(urlRef.current, idRef.current);
       createPlayer(videoId);
+      inputRef.current.value = "";
+      urlRef.current = "";
     } catch (error) {
       console.error("Error sending URL", error);
     }
   };
 
   const createPlayer = (videoId) => {
-    if (!window.YT || !window.YT.Player) {
-      console.error("YouTube API not loaded yet!");
-      return;
-    }
+    if (!window.YT?.Player) return console.error("YouTube API not loaded yet!");
 
     if (playerRef.current) {
       playerRef.current.loadVideoById(videoId);
     } else {
       playerRef.current = new window.YT.Player("youtube-player", {
-        videoId: videoId,
-        playerVars: {
-          autoplay: 1,
-          controls: 1,
-        },
+        videoId,
+        playerVars: { autoplay: 1, controls: 1 },
         events: {
-          onReady: (event) => {
-            console.log("Player Ready");
-             event.target.playVideo();
-          },
-          onStateChange: async (event) => {
-            if (!idRef.current) return;
-            if (event.data === YT.PlayerState.BUFFERING) {
-              if (isExternalSeek.current) return;
-              let seekTime = playerRef.current.getCurrentTime();
-                 
-                await  seeked(seekTime, idRef.current);
-               
-            }
-
-            if (event.data === 1) {
-              if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true)
-                  await handleEvent(true);
-            } else if (event.data === 2) {
-              if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true)
-              await handleEvent(false);
-
-            
-            } 
-          },
+          onReady: (event) => event.target.playVideo(),
+          onStateChange: handlePlayerStateChange,
         },
       });
     }
   };
 
+  const handlePlayerStateChange = async (event) => {
+    if (!idRef.current) return;
+
+    const { BUFFERING, PLAYING, PAUSED } = window.YT.PlayerState;
+
+    if (event.data === BUFFERING && !isExternalSeek.current) {
+      const seekTime = playerRef.current.getCurrentTime();
+      isSeeking.current = true;
+      await seeked(seekTime, idRef.current);
+      setTimeout(() => (isSeeking.current = false), 700);
+    }
+
+    if (event.data === PLAYING && !isSyncingPlayback.current) await handleEvent(true);
+    if (event.data === PAUSED && !isSyncingPlayback.current) await handleEvent(false);
+  };
+
+  const handlePlayPauseSync = (isPlaying) => {
+    isPlayingRef.current = isPlaying;
+    togglePlayPause();
+  };
+
+  const handleSeekSync = (time) => {
+    if (!idRef.current) return;
+    isExternalSeek.current = true;
+    isSyncingPlayback.current = true;
+
+    playerRef.current.seekTo(time, true);
+
+    setTimeout(() => {
+      playerRef.current.playVideo();
+      isExternalSeek.current = false;
+      isSyncingPlayback.current = false;
+    }, 700);
+  };
+
+  const handleUrlSync = (url) => {
+    const videoId = extractVideoId(url);
+    videoIdRef.current = videoId;
+    createPlayer(videoId);
+  };
+
   const togglePlayPause = () => {
     if (playerRef.current) {
-      if (isPlayingRef.current) {
-        playerRef.current.playVideo();
-      } else {
-        playerRef.current.pauseVideo();
-      }
+      isPlayingRef.current ? playerRef.current.playVideo() : playerRef.current.pauseVideo();
     }
   };
 
   const handleClose = () => {
     console.log("Closing Watch Party");
-    inputRef.current.value = "";
-    senderUrlDataIdRef.current = "";
-    isPlayingRef.current = true;
     setiswatchparty(false);
 
     if (playerRef.current) {
@@ -178,47 +145,32 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   };
 
   return (
-    <div className="wdiv min-h-[100vh] w-[100vw] flex justify-center items-center overflow-hidden sm:h-[100vh] sm:p-6 md:p-8 lg:p-10 relative">
+    <div className="wdiv min-h-screen w-screen flex justify-center items-center overflow-hidden">
       <nav>
-        <div className="w-[80vw] absolute top-0 left-10 flex items-center justify-center">
-          <div className="text-[#E50914] text-[30px] lg:text-4xl font-extrabold mb-3">
-            Watch-Party
-          </div>
+        <div className="absolute top-0 left-10 flex items-center justify-center w-[80vw]">
+          <h1 className="text-[#E50914] text-4xl font-extrabold">Watch-Party</h1>
         </div>
         <button
           onClick={handleClose}
-          className="absolute top-2 right-4 text-white text-2xl font-bold cursor-pointer bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
+          className="absolute top-2 right-4 text-white text-2xl bg-gray-800 p-2 rounded-full"
         >
           ✖
         </button>
       </nav>
 
-      <div className="flex w-screen-[85%] h-full flex-col items-center justify-items-center lg:flex-row p-4 overflow-hidden">
+      <div className="flex w-screen-[85%] flex-col items-center lg:flex-row p-4">
         <div className="left mb-5">
-          <div className="w-full mt-6 flex flex-col items-center space-y-4 px-4 sm:px-6 md:px-8">
-            <form
-              onSubmit={handleForm}
-              className="w-full flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3"
-            >
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder="Enter YouTube URL"
-                className="w-full p-2 rounded-lg border text-white bg-black/50 border-gray-400 focus:outline-none focus:border-blue-500"
-                onChange={handleInputChange}
-              />
-              <button
-                type="submit"
-                className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
-              >
-                Search
-              </button>
-            </form>
-
-            <div className="max-w-[800px] lg:w-[700px] h-[200px] w-[365px] md:w-[450px] sm:h-[200px] sm:w-[350px] md:h-[280px] lg:h-[405px] rounded-lg shadow-lg">
-              <div id="youtube-player" className="w-full h-full"></div>
-            </div>
-          </div>
+          <form onSubmit={handleForm} className="flex w-full space-x-3">
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Enter YouTube URL"
+              className="w-full p-2 rounded-lg bg-black/50 text-white"
+              onChange={handleInputChange}
+            />
+            <button type="submit" className="bg-black text-white px-4 py-2 rounded-lg">Search</button>
+          </form>
+          <div id="youtube-player" className="max-w-[800px] w-full h-[405px] rounded-lg"></div>
         </div>
         <Messagesmall socket={socket} />
       </div>
