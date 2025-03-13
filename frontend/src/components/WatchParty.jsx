@@ -43,8 +43,12 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     const syncSeek = (data) => {
       console.log("Received seek point:", data);
       if (data && playerRef.current) {
+        let a=1
+       if(a==1){
         playerRef.current.seekTo(data, true);
         playerRef.current.playVideo();
+       }
+       
       }
     };
 
