@@ -157,16 +157,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     }
   };
 
-  useEffect(() => {
-    if (playerRef.current) {
-      if (!isplaying) {
-       
-        playerRef.current.pauseVideo();
-      } else {
-        playerRef.current.playVideo();
-      }
-    }
-  }, [isplaying]);
+ 
 
   const handleClose = () => {
     console.log("Closing Watch Party");
