@@ -122,11 +122,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
         events: {
           onReady: (event) => {
             console.log("Player Ready");
-            if (!isPlayingRef.current) {
-              event.target.pauseVideo();
-            } else {
-              event.target.playVideo();
-            }
+             event.target.playVideo();
           },
           onStateChange: async (event) => {
             if (!idRef.current) return;
@@ -137,10 +133,10 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
             }
 
             if (event.data === 1) {
-              socket.emit("video_state", { state: "playing", videoId });
+            
               await handleEvent(true);
             } else if (event.data === 2) {
-              socket.emit("video_state", { state: "paused", videoId });
+             
               await handleEvent(false);
             } 
           },
