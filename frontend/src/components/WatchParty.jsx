@@ -60,15 +60,15 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       const currentTime = playerRef.current.getCurrentTime();
   
       // Prevent repeated seeking at the same position
-      if (Math.abs(currentTime - data) > 1 && data !== lastSeekTime.current) {
+    
         playerRef.current.seekTo(data, true);
         playerRef.current.playVideo();
   
         // Update last seek time
-        lastSeekTime.current = data;
+    
       }
     }
-  };
+  
 
   const syncUrl = (data) => {
     console.log("Syncing URL:", data);
