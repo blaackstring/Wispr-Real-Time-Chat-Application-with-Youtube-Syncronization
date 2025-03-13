@@ -133,10 +133,10 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
             }
 
             if (event.data === 1) {
-            
-              await handleEvent(true);
+              if (event.data !== YT.PlayerState.BUFFERING)
+                  await handleEvent(true);
             } else if (event.data === 2) {
-             
+              if (event.data !== YT.PlayerState.BUFFERING)
               await handleEvent(false);
             } 
           },
