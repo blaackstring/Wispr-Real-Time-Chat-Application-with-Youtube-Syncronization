@@ -13,7 +13,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const inputRef = useRef();
   const playerRef = useRef(null);
   const selector = useSelector((state) => state.UserClickedSlice.user);
-
+  const isExternalSeek = useRef(false);
   useEffect(() => {
     if (selector?.user?._id) {
       idRef.current = selector.user._id;
@@ -41,17 +41,19 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     };
 
     const syncSeek = (data) => {
-      console.log("Received seek point:", data);
-      if (data && playerRef.current) {
-        let a=1
-       if(a==1){
-        playerRef.current.seekTo(data, true);
-        playerRef.current.playVideo();
-       }
-       
-      }
-    };
-
+      if (!idRef.current) return;
+  
+      // Mark as external seek
+      isExternalSeek.current = true;
+  
+      playerRef.current.seekTo(data, true);
+      playerRef.current.playVideo();
+  
+      setTimeout(() => {
+          isExternalSeek.current = false; // Reset after short delay
+      }, 500);
+  };
+  
     const syncUrl = (data) => {
       console.log("Syncing URL:", data);
       const videoId = extractVideoId(data);
@@ -129,8 +131,9 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
           onStateChange: async (event) => {
             if (!idRef.current) return;
             if (event.data === YT.PlayerState.BUFFERING) {
+              if (isExternalSeek.current) return;
               let seekTime = playerRef.current.getCurrentTime();
-              seeked(seekTime, idRef.current);
+                await  seeked(seekTime, idRef.current);
             }
 
             if (event.data === 1) {
@@ -139,9 +142,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
             } else if (event.data === 2) {
               socket.emit("video_state", { state: "paused", videoId });
               await handleEvent(false);
-            } else if (event.data === 0) {
-              socket.emit("video_state", { state: "ended", videoId });
-            }
+            } 
           },
         },
       });
