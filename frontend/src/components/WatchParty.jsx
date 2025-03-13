@@ -44,18 +44,14 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
     const syncSeek = (data) => {
       if (!idRef.current) return;
-      isExternalSeek.current = true;
-      syncplaying.current=true;
-      // Mark as external seek
      
-      playerRef.current.seekTo(data, true);
+     
+      playerRef.current.seekTo(data,false);
       
       
       setTimeout(() => {
-        
-          isExternalSeek.current = false;
-          syncplaying.current=false;
-           // Reset after short delay
+        playerRef.current.playVideo()
+           
       }, 1000);
   };
   
@@ -132,7 +128,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
           onStateChange: async (event) => {
             if (!idRef.current) return;
             if (event.data === YT.PlayerState.BUFFERING) {
-              if (isExternalSeek.current) return;
+              
               let seekTime = playerRef.current.getCurrentTime();
                  playerRef.current.pauseVideo()
                 await  seeked(seekTime, idRef.current);
@@ -140,10 +136,10 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
             }
 
             if (event.data === 1) {
-              if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true)
+              if (event.data !== YT.PlayerState.BUFFERING&&syncplaying)
                   await handleEvent(true);
             } else if (event.data === 2) {
-              if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true)
+              if (event.data !== YT.PlayerState.BUFFERING)
               await handleEvent(false);
 
             
