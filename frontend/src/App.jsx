@@ -33,46 +33,28 @@ function App() {
     navigate("/login"); 
   };
   return (
-    <div className="w-screen min-h-screen flex bg-white/30 flex-col ">
+    <div className="w-screen justify-center min-h-screen overflow-hidden flex bg-white/30 flex-col ">
       {/* Navbar */}
       <div className="w-screen flex  top-1 justify-center absolute">
-        <nav className="min-w-[20%] h-[7vh] flex justify-around items-center backdrop-blur-md bg-white/10 rounded-2xl lg:text-xl font-bold ">
-          {loginornot ? (
-            <Link
-              onClick={handleLogout}
-              className="text-white border-2  hover:text-black hover:bg-white hover:transition-0.3s border-white/30 p-1 rounded-2xl"
-            >
-              Logout
-            </Link>
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className={`${
-                  location.pathname === "/login"
-                    ? "text-white border-2 border-b-black p-2 rounded-2xl"
-                    : ""
-                }`.trim()}
-              >
-                Login
-              </Link>
-              <Link
-                to="/signup"
-                className={`${
-                  location.pathname === "/signup"
-                    ? "text-white border-2 border-b-black border-t-amber-600 p-2 rounded-2xl"
-                    : ""
-                }`.trim()}
-              >
-                Signup
-              </Link>
-            </>
-          )}
-        </nav>
+      {!loginornot&&<nav className="min-w-[50%]  flex justify-around items-center backdrop-blur-md bg-white/10 rounded-xl lg:text-xl font-bold ">
+          
+            
+          <Link
+            to="/login"
+            className={`${location.pathname === "/login"? "text-white border-2 border-b-black p-2 rounded-2xl" : ""}`}>
+            Login
+          </Link>
+          <Link
+            to="/signup"
+            className={`${location.pathname === "/signup"? "text-white border-2 border-b-black border-t-amber-600 p-2 rounded-2xl": "" }`}>
+            Signup
+          </Link>
+    
+    </nav>}
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex items-center justify-center mt-[10vh]">
+      <div className=" flex items-center justify-center ">
         <Outlet />
       </div>
     </div>

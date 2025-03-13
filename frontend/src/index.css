@@ -13,16 +13,16 @@ background-repeat: no-repeat;
 }
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
-  width: 10px; /* Width of the scrollbar */
+  width: 6px; /* Width of the scrollbar */
 }
 
 ::-webkit-scrollbar-track {
-  background: #2A3942; /* Track color */
+  background: #2b3e4a; /* Track color */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #5b646e; /* Scrollbar color */
-  border-radius: 15px; /* Rounded edges */
+  background: #186ed0; /* Scrollbar color */
+  border-radius: 5px; /* Rounded edges */
 }
 
 ::-webkit-scrollbar-thumb:hover {

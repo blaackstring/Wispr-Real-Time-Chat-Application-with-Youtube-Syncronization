@@ -45,8 +45,16 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     const syncSeek = (data) => {
       console.log("Received seek point:", data);
       if (data && playerRef.current) {
-        playerRef.current.seekTo(data, true);
-        playerRef.current.playVideo();
+        const currentTime = playerRef.current.getCurrentTime();
+    
+        // Prevent repeated seeking at the same position
+        if (Math.abs(currentTime - data) > 1 && data !== lastSeekTime.current) {
+          playerRef.current.seekTo(data, true);
+          playerRef.current.playVideo();
+    
+          // Update last seek time
+          lastSeekTime.current = data;
+        }
       }
     };
 
@@ -170,14 +178,14 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   };
 
   return (
-    <div className="wdiv min-h-[90vh] w-[100vw]  flex justify-center items-center overflow-hidden sm:h-[70vh] sm:p-6 md:p-8 lg:p-10 relative">
+    <div className="wdiv min-h-screen w-[100vw]  flex justify-center items-center overflow-hidden sm:h-[100vh] sm:p-6 md:p-8 lg:p-5 relative">
      <nav>
-      <div className="w-[80vw] absolute top-0 left-10 flex items-center justify-center    ">
-        <div className="text-[#E50914] text-[34px] lg:text-5xl font-extrabold mb-3">Watch-Party</div>
+      <div className="w-[80vw] absolute top-0 left-10 flex items-center justify-center ">
+        <div className="text-[#E50914] text-[40px] lg:text-5xl font-extrabold mt-1 text-center">Watch-Party</div>
       </div>
      <button
         onClick={handleClose}
-        className="absolute top-2 right-4 text-white text-2xl font-bold cursor-pointer bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
+        className="absolute top-1 right-4 text-white text-3xl font-bold cursor-pointer bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
       >
         ✖
       </button>
@@ -199,7 +207,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
           </button>
         </form>
 
-        <div className=" max-w-[800px] lg:w-[700px] h-[200px] w-[365px] md:w-[450px] sm:h-[200px]  sm:w-[350px] md:h-[280px] lg:h-[405px] rounded-lg shadow-lg">
+        <div className=" max-w-[860px] lg:w-[890px] h-[250px] w-[300px] md:w-[450px] sm:h-[200px]  sm:w-[300px] md:h-[280px] lg:h-[500px] rounded-lg shadow-lg">
           <div id="youtube-player" className="w-full h-full"></div>
         </div>
       </div>

@@ -132,19 +132,19 @@ console.log(grabuser.current);
    <div className="w-full h-full">
     <div className={`w-full h-full ${iswatchparty?'hidden':'block'}`}>
       {(!isclicked || width > 900) && (
-        <div className="msg h-full w-[98%] flex flex-col">
+        <div className="msg h-full w-full flex  justify-center items-center flex-col">
           {/* ✅ Header Section */}
           {!userstate.clicked ? (
-            <div className="lg:text-xl text-lg mt-2 font-bold text-white text-center">
+            <div className="lg:text-xl relative top-[-40px] text-lg font-bold text-white text-center">
               Start Chat Now...💬
             </div>
           ) : (
             <div className="w-full h-full">
-              <nav className="w-full h-[10vh] bg-[#202C33] text-white text-xl flex items-center justify-start p-2">
+              <nav className="w-full h-[9vh] bg-[#141b20] text-white text-xl flex items-center justify-start p-3">
                 {width < 800 && (
-                  <div className="min-w-[14%] ml-2 flex overflow-hidden">
+                  <div className="min-w-[15%] ml-2 flex overflow-hidden">
                     <ArrowBigLeftDashIcon
-                      className="w-7 h-7 rounded-2xl cursor-pointer"
+                      className="w-8 h-8 rounded-2xl cursor-pointer"
                       onClick={() => setisclicked(true)}
                     />
                   </div>
@@ -178,7 +178,7 @@ console.log(grabuser.current);
           )}
 
           {/* ✅ Message Container */}
-        {<div className="msgcontent flex flex-col min-h-[58vh] w-full p-1 overflow-y-auto">
+        {<div className="msgcontent flex flex-col min-h-[61vh] w-full p-1 overflow-y-auto">
             {allmsg?.length > 0 &&
               allmsg?.map((msg) => (
                 <div className="w-full h-full " key={msg._id}>
@@ -207,11 +207,11 @@ console.log(grabuser.current);
 
 
           {userstate.clicked && (
-            <div className="w-full  bg-[#202C33] p-2">
+            <div className="w-full  p-1">
               <form className="w-full flex" onSubmit={handleform}>
                 <input
                   type="text"
-                  className="min-w-[80%] h-9 p-2 rounded-xl mr-1 text-white bg-[#2A3942] outline-none border-none"
+                  className="min-w-[80%] h-9 p-2 rounded-2xl mr-1 text-white bg-[#2A3942] outline-none border-none"
                   placeholder="Message"
                   name="msg"
                   autoComplete="off"

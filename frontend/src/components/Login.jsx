@@ -34,7 +34,10 @@ const dispatch=useDispatch()
        const {message,user}=fetchData;
        console.log(user);
     dispatch(AuthLogin({...user}))
-    navigate('/userhome')
+    navigate('/userhome',{
+      replace: true, 
+      state:true
+    })
     toast.success('🦄 Login SuccessFull!', {
       position: "top-right",
       autoClose: 5000,
@@ -66,8 +69,8 @@ const handleinputchange=(e)=>{
 }
 
     return (
-      <div className="lg:w-[40vw] sm:w-[80vw]  h-[50vh] p-2 flex items-center justify-center backdrop:blur-3xl  bg-white/40 rounded-4xl">
-        <div className="   bg-white/70 p-3 rounded-lg shadow-lg h-full flex flex-col items-center justify-around">
+      <div className="lg:w-[55vw] sm:w-[90vw]  lg:h-[80vh] h-[50vh] w-[95vw] p-2 flex items-center justify-center backdrop:blur-3xl   bg-white/20 rounded-2xl">
+        <div className="   bg-white/40 p-3 lg:w-[35vw] rounded-lg shadow-lg lg:h-[45vh] flex flex-col items-center justify-around">
                  <img src={loginImg} alt="" className='w-[100px] h-[100px] '/>
           <form action="" onSubmit={handleSubmit} className="flex items-center flex-col">
 

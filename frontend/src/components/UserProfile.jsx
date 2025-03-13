@@ -17,14 +17,14 @@ function UserProfile() {
     const isPageRefreshed = localStorage.getItem('isPageRefreshed');
     
     if (isPageRefreshed) {
-      // If the flag is found, navigate to '/userhome'
+
       navigate('/userhome');
     } else {
-      // If it's the first time, set the flag in localStorage
+ 
       localStorage.setItem('isPageRefreshed', 'true');
     }
 
-    // Clean up the localStorage flag when the component is unmounted or on new session
+    
     return () => {
       localStorage.removeItem('isPageRefreshed');
     };
@@ -37,26 +37,24 @@ function UserProfile() {
     }
       
   return (
-    <div className='lg:w-[30vw] h-[50vh] w-[70vw] flex-col text-white flex justify-center items-center  lg:text-2xl font-bold rounded-2xl p-2 bg-[#0B141A]'>
+    <div className='lg:w-[35vw] h-[60vh] w-[80vw] flex-col text-white flex justify-center items-center  lg:text-xl font-bold rounded-2xl p-2 bg-[#0B141A]'>
        <nav className='w-full '>
          <img src={bckbtn} alt="" className='rounded-[50%] w-8 h-8 bg-amber-50' onClick={userimghandler} />
        </nav>
-      <div className='w-[35vw] h-[40vh] flex items-center flex-col justify-around'>
+      <div className='w-[35vw] h-[50vh] flex flex-col justify-around items-center'>
       
       <div className=''>
       <nav className='w-full '>
         <ProfileComponent pic={dataFromSlice?.ProfilePic}/>
        </nav>
       </div>
-      <span>
-        <span className='mr-5 underline uppercase'>fullname:</span>{dataFromSlice.fullname}
-      </span>
-      <span>
-       <span className='mr-5 underline uppercase'> username:</span>{dataFromSlice.username}
-      </span>
-      <span>
-       <span className='mr-5 underline uppercase'> Email:</span>{dataFromSlice.email}
-      </span>
+      
+<div className='flex flex-col p-1  h-screen-[60%] items-center text-l lg:w-full w-[80vw]'>
+<div className='mr-5 underline uppercase mt-5 '>fullname: <span className='ml-4 mt-5 '>{dataFromSlice.fullname}</span></div>
+        <div className='mr-5 underline uppercase mt-5 '>Username <span className='ml-4 mt-5'>{dataFromSlice.username}</span></div>
+        <div className='mr-5 underline uppercase mt-5 '>Email: <span className='ml-5 mt-5'>{dataFromSlice.email}</span></div>
+</div>
+    
    
       </div>
     </div>

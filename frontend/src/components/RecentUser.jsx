@@ -34,7 +34,7 @@ function RecentUser({setisclicked}) {
 
 
   return <>
-    {RecentUsers.length > 0 ? <div className='min-w-[80vw] flex-1 text-white justify-center flex flex-col p-1 overflow-y-auto'>
+    {RecentUsers.length > 0 ? <div className='min-w-[80vw] flex-1  text-white justify-center flex flex-col p-1 '>
       {RecentUsers.map((recent) => {
         return (
           <div
@@ -43,18 +43,18 @@ function RecentUser({setisclicked}) {
             className='h-[8vh]  lg:w-[19vw] items-center flex mb-1 justify-center  rounded'
             onClick={() => clickhandler(recent)} // Pass the recent object
           >
-            <div className={`flex items-center w-full justify-start p-2 h-full mt-2 bg-[#4a4e65] ${Rcnt?._id === recent._id ? 'bg-black' : ''}  hover:bg-[#110f0f] rounded`} key={recent._id + 7}>
+            <div className={`flex items-center w-full justify-start p-2 h-full mt-2 bg-[#2e313f] ${Rcnt?._id === recent._id ? 'bg-white text-black' : ''}  hover:bg-[#fbe5e5] rounded hover:text-black`} key={recent._id + 7}>
               {recent.ProfilePic ? (
                 <img src={recent?.ProfilePic} alt="pic" className='w-12 h-12 rounded-[50%] bg-blue-200 mr-5' />
               ) : ''}
-  
-              <span className='mt-1 mb-1 '> {recent.fullname}</span>
-              <div className='flex justify-end items-center w-full'>
-              { OnlineUsers?.includes(recent._id) ?(
+      { OnlineUsers?.includes(recent._id) ?(
                   <span className="text-green-400 ml-2 text-sm">🟢</span>
                 ) : (
                   <span className="text-xs text-red-400">🔴</span>
                 )}
+              <span className='mt-1 mb-1 '> {recent.fullname}</span>
+              <div className='flex justify-end items-center w-full'>
+          
               </div>
             </div>
             <div ref={ref}></div>
