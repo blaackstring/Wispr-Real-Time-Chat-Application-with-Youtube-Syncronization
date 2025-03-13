@@ -148,7 +148,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     <div className="wdiv min-h-screen w-screen flex justify-center items-center overflow-hidden">
       <nav>
         <div className="absolute top-0 left-10 flex items-center justify-center w-[80vw]">
-          <h1 className="text-[#E50914] text-4xl font-extrabold">Watch-Party</h1>
+          <h1 className="text-[#E50914] lg:text-4xl text-[30px] font-bold">Watch-Party</h1>
         </div>
         <button
           onClick={handleClose}
