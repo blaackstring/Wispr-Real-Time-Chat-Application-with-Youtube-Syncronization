@@ -168,7 +168,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   };
 
   return (
-    <div className="wdiv min-h-[90vh] w-[100vw] flex justify-center items-center overflow-hidden sm:h-[70vh] sm:p-6 md:p-8 lg:p-10 relative">
+    <div className="wdiv min-h-[100vh] w-[100vw] flex justify-center items-center overflow-hidden sm:h-[100vh] sm:p-6 md:p-8 lg:p-10 relative">
       <nav>
         <div className="w-[80vw] absolute top-0 left-10 flex items-center justify-center">
           <div className="text-[#E50914] text-[30px] lg:text-4xl font-extrabold mb-3">
