@@ -59,7 +59,11 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     console.log("Received seek point:", data);
     if (data && playerRef.current) {
       seekingRef.current = true;
-      playerRef.current.seekTo(data, false); // Ensure `true` to force immediate seek
+      new Promise((resolve) => {
+        playerRef.current.seekTo(data, false);
+        resolve(); // Resolve the promise after seeking
+    })
+    
       setTimeout(() => (seekingRef.current = false), 1000); // Buffer time to avoid play/pause conflict
     }
   };
