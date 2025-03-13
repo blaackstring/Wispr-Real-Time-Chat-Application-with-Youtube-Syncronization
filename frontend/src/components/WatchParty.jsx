@@ -134,7 +134,6 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
             if (event.data === YT.PlayerState.BUFFERING) {
               if (isExternalSeek.current) return;
               let seekTime = playerRef.current.getCurrentTime();
-                 playerRef.current.pauseVideo()
                 await  seeked(seekTime, idRef.current);
                
             }
@@ -143,7 +142,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
               if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true)
                   await handleEvent(true);
             } else if (event.data === 2) {
-              if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true)
+              if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true&&isPlayingRef.current==true)
               await handleEvent(false);
 
             
