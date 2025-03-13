@@ -49,10 +49,10 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   }, [socket]);
 
   const syncVideoState = (data) => {
-    if (!seekingRef.current) {
+ 
       console.log("Syncing play/pause:", data);
       setisplaying(data);
-    }
+    
   };
 
   const syncSeek = (data) => {
@@ -60,10 +60,12 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     if (data && playerRef.current) {
       seekingRef.current = true;
       new Promise((resolve) => {
+       
         playerRef.current.seekTo(data, false);
+        playerRef.current.playVideo();
         resolve(); // Resolve the promise after seeking
     })
-    playerRef.current.playVideo();
+    
     setisplaying(true);
     }
   };
