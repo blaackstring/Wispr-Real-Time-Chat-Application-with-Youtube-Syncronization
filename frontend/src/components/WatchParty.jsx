@@ -37,33 +37,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   }, []);
 
   useEffect(() => {
-    const syncVideoState = (data) => {
-      console.log("Syncing play/pause:", data);
-      setisplaying(data);
-    };
-
-    const syncSeek = (data) => {
-      console.log("Received seek point:", data);
-      if (data && playerRef.current) {
-        const currentTime = playerRef.current.getCurrentTime();
-    
-        // Prevent repeated seeking at the same position
-        if (Math.abs(currentTime - data) > 1 && data !== lastSeekTime.current) {
-          playerRef.current.seekTo(data, true);
-          playerRef.current.playVideo();
-    
-          // Update last seek time
-          lastSeekTime.current = data;
-        }
-      }
-    };
-
-    const syncUrl = (data) => {
-      console.log("Syncing URL:", data);
-      const videoId = extractVideoId(data);
-      setSenderUrlDataId(videoId);
-      createPlayer(videoId);
-    };
+   
 
     socket.on("play_pause", syncVideoState);
     socket.on("seek", syncSeek);
@@ -75,6 +49,33 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       socket.off("send_url", syncUrl);
     };
   }, [socket]);
+  const syncVideoState = (data) => {
+    console.log("Syncing play/pause:", data);
+    setisplaying(data);
+  };
+
+  const syncSeek = (data) => {
+    console.log("Received seek point:", data);
+    if (data && playerRef.current) {
+      const currentTime = playerRef.current.getCurrentTime();
+  
+      // Prevent repeated seeking at the same position
+      if (Math.abs(currentTime - data) > 1 && data !== lastSeekTime.current) {
+        playerRef.current.seekTo(data, true);
+        playerRef.current.playVideo();
+  
+        // Update last seek time
+        lastSeekTime.current = data;
+      }
+    }
+  };
+
+  const syncUrl = (data) => {
+    console.log("Syncing URL:", data);
+    const videoId = extractVideoId(data);
+    setSenderUrlDataId(videoId);
+    createPlayer(videoId);
+  };
 
   const extractVideoId = (url) => {
     const match = url.match(
