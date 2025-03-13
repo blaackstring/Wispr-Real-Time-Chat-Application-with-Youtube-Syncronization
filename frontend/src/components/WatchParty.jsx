@@ -63,8 +63,8 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
         playerRef.current.seekTo(data, false);
         resolve(); // Resolve the promise after seeking
     })
-    
-      setTimeout(() => (seekingRef.current = false), 1000); // Buffer time to avoid play/pause conflict
+    playerRef.current.playVideo();
+    setisplaying(true);
     }
   };
 
@@ -159,10 +159,11 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
   useEffect(() => {
     if (playerRef.current) {
-      if (isplaying) {
-        playerRef.current.playVideo();
-      } else {
+      if (!isplaying) {
+       
         playerRef.current.pauseVideo();
+      } else {
+        playerRef.current.playVideo();
       }
     }
   }, [isplaying]);
