@@ -54,7 +54,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       setTimeout(() => {
         playerRef.current.playVideo();
           isExternalSeek.current = false;
-          syncplaying.current=true;
+          syncplaying.current=false;
            // Reset after short delay
       }, 700);
   };
