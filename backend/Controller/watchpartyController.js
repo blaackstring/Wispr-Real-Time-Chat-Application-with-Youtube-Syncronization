@@ -2,7 +2,7 @@ import { getReciverSocketId, io } from "../Socket.io/Socket.js"
 
 export const SendUrl=(req,res)=>{
     try {
-        const {id:receiverid}=req.params;
+        const {id:receiverid,senderid}=req.params;
     const url=req.body.url
 console.log(url,receiverid);
 
@@ -11,8 +11,9 @@ console.log(url,receiverid);
     const ReciverSocketId=getReciverSocketId(receiverid);
     console.log(ReciverSocketId);
     
+console.log("RECiveriDDDDDD",receiverid);
 
-    if(ReciverSocketId) io.to(ReciverSocketId).emit("send_url",{url,receiverid});
+    if(ReciverSocketId) io.to(ReciverSocketId).emit("send_url",{url,senderid});
 
     res.status(201).json({
         success: true,

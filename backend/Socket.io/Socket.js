@@ -6,10 +6,10 @@ import { Server } from "socket.io";
 const app=express();
 
 const server=http.createServer(app);
-
+let l=[process.env.ORIGIN || "http://localhost:5173"]
 const io=new Server(server,{
     cors:{
-        origin: [process.env.ORIGIN || "http://localhost:5173"],
+        origin:"http://localhost:5173" ,
         methods:["GET","POST"]
     }
 }); 

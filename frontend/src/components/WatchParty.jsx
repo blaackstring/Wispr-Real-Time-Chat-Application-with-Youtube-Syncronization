@@ -13,6 +13,8 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const inputRef = useRef();
   const playerRef = useRef(null);
   const selector = useSelector((state) => state.UserClickedSlice.user);
+  const user= useSelector((state) => state.user);
+  const userRef=useRef()
   const isExternalSeek = useRef(false);
   const syncplaying = useRef(false);
 
@@ -23,6 +25,12 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     }
   }, [selector]);
 
+
+  useEffect(() => {
+    if (user?.userid) {
+      userRef.current = user.userid
+    }
+  }, [user]);
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement("script");
@@ -46,8 +54,8 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     const isUserBusy= (data) => {
       console.log("Inside busy",id);
       
-      if (data) {
-          toast.warn('🦄 User is busy!', {
+      if (data.url) {
+          toast('🦄 User is busy!', {
               position: "top-right",
               autoClose: 5000,
               hideProgressBar: false,
@@ -81,12 +89,11 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   
     const syncUrl = (data) =>{
       console.log("Inside URL")
-      const {url,reciverId,}=data
-      console.log("Syncing URL:", url,reciverId);
-      if(reciverId==idRef.current)
+console.log(idRef.current,data);
+
+      if(data.senderid==idRef.current)
      { console.log("Inside sync url");
-     
-      const videoId = extractVideoId(url);
+      const videoId = extractVideoId(data.url);
       senderUrlDataIdRef.current = videoId;
       createPlayer(videoId);
      }
@@ -104,7 +111,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       socket.off("seek", syncSeek);
       socket.off("send_url", syncUrl);
     };
-  }, [socket]);
+  }, [socket,selector]);
 
   const extractVideoId = (url) => {
     const match = url.match(
@@ -127,7 +134,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     if (!urlRef.current) return;
 
     try {
-      const res = await sendurl(urlRef.current, idRef.current);
+      const res = await sendurl(urlRef.current, idRef.current,userRef.current);
       const videoId = extractVideoId(urlRef.current);
       senderUrlDataIdRef.current = videoId;
       urlRef.current = "";

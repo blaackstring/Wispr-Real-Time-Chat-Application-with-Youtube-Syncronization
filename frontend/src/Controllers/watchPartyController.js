@@ -1,6 +1,6 @@
-export const sendurl=async(url,id)=>{
+export const sendurl=async(url,id,senderid)=>{
     try {
-        const res= await fetch(`/api/watchparty/sendUrl/${id}`,{
+        const res= await fetch(`/api/watchparty/sendUrl/${id}/${senderid}`,{
             method:"POST",
             credentials:"include",
             headers: {
