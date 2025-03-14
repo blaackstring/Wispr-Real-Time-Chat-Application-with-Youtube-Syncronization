@@ -25,12 +25,18 @@ function Messagesmall({ socket }) {
 
   useEffect(() => {
     if (!socket) return;
-    socket.on("New_Message", (msg) => {
-      let audio = new Audio(sound);
-      // audio.play();
-      setallmsg((prev) => [...prev, msg]);
-      setTimeout(() => ref.current?.scrollIntoView({ behavior: "smooth" }), 100);
-    });
+     socket.on("New_Message", (msg) => {
+          console.log( grabuser.current);
+          console.log(msg.senderid.toString());
+          if (msg.senderid.toString() == grabuser.current){
+            let audio = new Audio(sound);
+            audio.play();
+            console.log(msg);
+            setallmsg((prev) => [...prev, msg]);
+            setTimeout(() => ref.current?.scrollIntoView({ behavior: "smooth" }), 100);}
+          
+        });
+        
     socket.on("getOnlineUsers", (Users) => {
       setOnlineUsers(Users);
     });

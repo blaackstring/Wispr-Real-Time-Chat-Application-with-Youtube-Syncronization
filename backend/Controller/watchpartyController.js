@@ -12,7 +12,7 @@ console.log(url,receiverid);
     console.log(ReciverSocketId);
     
 
-    if(ReciverSocketId) io.to(ReciverSocketId).emit("send_url",url);
+    if(ReciverSocketId) io.to(ReciverSocketId).emit("send_url",{url,receiverid, ReciverSocketId});
 
     res.status(201).json({
         success: true,
@@ -29,6 +29,8 @@ console.log(url,receiverid);
         
     }
 }
+
+
 
 export const PlayorPaused=(req,res)=>{
     try {

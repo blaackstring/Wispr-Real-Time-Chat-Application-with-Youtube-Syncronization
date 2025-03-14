@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { playorpaused, seeked, sendurl } from "@/Controllers/watchPartyController.js";
 import { useSelector } from "react-redux";
 import './watchparty.css';
-import Message from "./Message";
 import Messagesmall from "./Messagesmall";
+import { toast, Bounce } from 'react-toastify';
 
 function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const urlRef = useRef("");
@@ -15,6 +15,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const selector = useSelector((state) => state.UserClickedSlice.user);
   const isExternalSeek = useRef(false);
   const syncplaying = useRef(false);
+  const isuserbusy=useRef(false)
 
   useEffect(() => {
     if (selector?.user?._id) {
@@ -42,6 +43,23 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       togglePlayPause();
     };
 
+    const isUserBusy = (data) => {
+      isuserbusy.current=data
+      if(isuserbusy.current==true){
+        toast.warn('🦄 Wow so easy!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+          });
+      }
+    };
+
     const syncSeek = (data) => {
       if (!idRef.current) return;
       isExternalSeek.current = true;
@@ -59,13 +77,20 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       }, 1000);
   };
   
-    const syncUrl = (data) => {
+    const syncUrl = (data) =>{
+      const {url,reciverId, ReciverSocketId}=data
       console.log("Syncing URL:", data);
-      const videoId = extractVideoId(data);
+      if(reciverId== idRef.current)
+     {
+      const videoId = extractVideoId(url);
       senderUrlDataIdRef.current = videoId;
       createPlayer(videoId);
+     }
+     else{
+      socket.to( ReciverSocketId).emit("isUserBusy",{isUserBusy:true});
+     }
     };
-
+    socket.on("isUserBusy", isUserBusy);
     socket.on("play_pause", syncVideoState);
     socket.on("seek", syncSeek);
     socket.on("send_url", syncUrl);
