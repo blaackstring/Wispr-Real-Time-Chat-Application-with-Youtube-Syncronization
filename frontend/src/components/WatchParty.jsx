@@ -15,7 +15,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const selector = useSelector((state) => state.UserClickedSlice.user);
   const isExternalSeek = useRef(false);
   const syncplaying = useRef(false);
-  const isuserbusy=useRef(false)
+
 
   useEffect(() => {
     if (selector?.user?._id) {
@@ -81,7 +81,8 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       const {url,reciverId, ReciverSocketId}=data
       console.log("Syncing URL:", data);
       if(reciverId==idRef.current)
-     {
+     { console.log("Inside sync url");
+     
       const videoId = extractVideoId(url);
       senderUrlDataIdRef.current = videoId;
       createPlayer(videoId);
