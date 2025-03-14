@@ -129,7 +129,7 @@ console.log(grabuser.current);
 
 
   return (
-   <div className="w-full bg-amber-600 h-full">
+   <div className="w-full bg-[#1a2228] h-full">
     <div className={`w-full h-full ${iswatchparty?'hidden':'block'}`}>
       {(!isclicked || width > 900) && (
         <div className="msg h-full bg-amber-300 w-full flex overflow-x-hidden justify-center items-center flex-col">
@@ -178,7 +178,7 @@ console.log(grabuser.current);
           )}
 
           {/* ✅ Message Container */}
-        {<div className="msgcontent flex flex-col sm:min-h-[74vh] lg:min-h-[55vh] w-full p-1 overflow-y-auto">
+        {<div className="msgcontent flex flex-col sm:min-h-[72vh] lg:min-h-[55vh] w-full p-1 overflow-y-auto">
             {allmsg?.length > 0 &&
               allmsg?.map((msg) => (
                 <div className="w-full h-full " key={msg._id}>
@@ -207,7 +207,7 @@ console.log(grabuser.current);
 
 
           {userstate.clicked && (
-            <div className="w-full  p-1 ">
+            <div className="w-full  p-1 mb-4">
               <form className="w-full flex" onSubmit={handleform}>
                 <input
                   type="text"

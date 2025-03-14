@@ -43,7 +43,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       togglePlayPause();
     };
 
-    socket.on("isUserBusy", (data) => {
+    const isUserBusy= (data) => {
       if (data) {
           toast.warn('🦄 User is busy!', {
               position: "top-right",
@@ -57,7 +57,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
               transition: Bounce,
           });
       }
-  });
+  }
   
 
     const syncSeek = (data) => {
