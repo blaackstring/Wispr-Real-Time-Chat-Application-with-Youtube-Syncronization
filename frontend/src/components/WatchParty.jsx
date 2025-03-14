@@ -93,7 +93,6 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     const syncUrl = (data) =>{
       console.log("Inside URL")
 console.log(idRef.current,data);
-reciveruser.current=data.senderid
       if(data.senderid==idRef.current)
      { console.log("Inside sync url");
       reciveruser.current=data.senderid
@@ -114,6 +113,7 @@ reciveruser.current=data.senderid
       socket.off("play_pause", syncVideoState);
       socket.off("seek", syncSeek);
       socket.off("send_url", syncUrl);
+      socket.off("isUserBusy", isUserBusy); // Missing cleanup
     };
   }, [socket,selector]);
 
@@ -151,52 +151,60 @@ reciveruser.current=data.senderid
 
   const createPlayer = (videoId) => {
     if (!window.YT || !window.YT.Player) {
-      console.error("YouTube API not loaded yet!");
-      return;
+        console.error("YouTube API not loaded yet!");
+        return;
     }
 
     if (playerRef.current) {
-      playerRef.current.loadVideoById(videoId);
+        playerRef.current.loadVideoById(videoId);
     } else {
-      playerRef.current = new window.YT.Player("youtube-player", {
-        videoId: videoId,
-        playerVars: {
-          autoplay: 1,
-          controls: 1,
-        },
-        events: {
-          onReady: (event) => {
-            console.log("Player Ready");
-             event.target.playVideo();
-          },
-          onStateChange: async (event) => {
-            if (!idRef.current) return;
-            if (event.data === YT.PlayerState.BUFFERING) {
-              if (isExternalSeek.current) return;
-              let seekTime = playerRef.current.getCurrentTime();
-                await  seeked(seekTime, idRef.current);
-               
-            }
+        playerRef.current = new window.YT.Player("youtube-player", {
+            videoId: videoId,
+            playerVars: {
+                autoplay: 1,
+                controls: 1,
+            },
+            events: {
+                onReady: (event) => {
+                    console.log("Player Ready");
+                    event.target.playVideo();
+                },
+                onStateChange: async (event) => {
+                    if (!idRef.current) return;
 
-            if (event.data === 1) {
-              if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true)
-                if(reciveruser.current==idRef.current)
-                  await handleEvent(true);
-            } else if (event.data === 2) {
-              if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true&&isPlayingRef.current==true)
-                if(reciveruser.current==idRef.current)
-              await handleEvent(false);
+                    // BUFFERING state
+                    if (event.data === window.YT.PlayerState.BUFFERING) {
+                        if (isExternalSeek.current) return;
+                        let seekTime = playerRef.current.getCurrentTime();
+                        seeked(seekTime, idRef.current).catch(console.error);
+                    }
 
-            
-            } 
-          },
-        },
-      });
+                    // PLAYING state
+                    if (event.data === window.YT.PlayerState.PLAYING) {
+                        if (syncplaying.current !== true) {
+                            if (reciveruser.current === idRef.current) {
+                                handleEvent(true).catch(console.error);
+                            }
+                        }
+                    }
+                    
+                    // PAUSED state
+                    if (event.data === window.YT.PlayerState.PAUSED) {
+                        if (syncplaying.current !== true && isPlayingRef.current === true) {
+                            if (reciveruser.current === idRef.current) {
+                                handleEvent(false).catch(console.error);
+                            }
+                        }
+                    }
+                },
+            },
+        });
     }
-  };
+};
+
 
   const togglePlayPause = () => {
-    if (playerRef.current&&reciveruser.current) {
+    if (playerRef.current) {
       if (isPlayingRef.current) {
         playerRef.current.playVideo();
       } else {
