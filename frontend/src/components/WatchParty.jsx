@@ -43,22 +43,22 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       togglePlayPause();
     };
 
-    const isUserBusy = (data) => {
-      isuserbusy.current=data
-      if(isuserbusy.current==true){
-        toast.warn('🦄 Wow so easy!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          transition: Bounce,
+    socket.on("isUserBusy", (data) => {
+      if (data.isUserBusy) {
+          toast.warn('🦄 User is busy!', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              transition: Bounce,
           });
       }
-    };
+  });
+  
 
     const syncSeek = (data) => {
       if (!idRef.current) return;
@@ -87,9 +87,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       createPlayer(videoId);
      }
      else{
-      console.log(url,reciverId,ReciverSocketId);
-      
-      socket.to( ReciverSocketId).emit("isUserBusy",{isUserBusy:true});
+      socket.emit("isUserBusy",{isUserBusy:true});
      }
     };
     socket.on("isUserBusy", isUserBusy);
