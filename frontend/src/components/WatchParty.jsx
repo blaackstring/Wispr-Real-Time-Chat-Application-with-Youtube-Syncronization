@@ -180,9 +180,11 @@ console.log(idRef.current,data);
 
             if (event.data === 1) {
               if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true)
+                if(data.senderid==idRef.current)
                   await handleEvent(true);
             } else if (event.data === 2) {
               if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true&&isPlayingRef.current==true)
+                if(data.senderid==idRef.current)
               await handleEvent(false);
 
             
