@@ -20,6 +20,7 @@ function Messagesmall({ socket }) {
   
     useEffect(()=>{
   grabuser.current=userstate
+  grabuser.current=userstate.user?._id
   console.log(grabuser.current);
   
     },[userstate])
