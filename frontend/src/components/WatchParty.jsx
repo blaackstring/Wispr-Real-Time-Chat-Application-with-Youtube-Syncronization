@@ -44,6 +44,8 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     };
 
     const isUserBusy= (data) => {
+      console.log("Inside busy",id);
+      
       if (data) {
           toast.warn('🦄 User is busy!', {
               position: "top-right",
@@ -78,8 +80,9 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   };
   
     const syncUrl = (data) =>{
-      const {url,reciverId, ReciverSocketId}=data
-      console.log("Syncing URL:", data);
+      console.log("Inside URL")
+      const {url,reciverId,}=data
+      console.log("Syncing URL:", url,reciverId);
       if(reciverId==idRef.current)
      { console.log("Inside sync url");
      

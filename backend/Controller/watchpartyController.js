@@ -12,7 +12,7 @@ console.log(url,receiverid);
     console.log(ReciverSocketId);
     
 
-    if(ReciverSocketId) io.to(ReciverSocketId).emit("send_url",{url,receiverid, ReciverSocketId});
+    if(ReciverSocketId) io.to(ReciverSocketId).emit("send_url",{url,receiverid});
 
     res.status(201).json({
         success: true,
