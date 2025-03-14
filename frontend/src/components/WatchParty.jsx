@@ -17,7 +17,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const userRef=useRef()
   const isExternalSeek = useRef(false);
   const syncplaying = useRef(false);
-
+  const reciveruser=useRef()
 
   useEffect(() => {
     if (selector?.user?._id) {
@@ -46,15 +46,15 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
   useEffect(() => {
     const syncVideoState = (data) => {
+
+      if(reciveruser.current===idRef.current){ 
       console.log("Syncing play/pause:", data);
       isPlayingRef.current = data;
-      togglePlayPause();
+      togglePlayPause();}
     };
 
     const isUserBusy= (data) => {
-      console.log("Inside busy",id);
-      
-      if (data.url) {
+      if (data) {
           toast('🦄 User is busy!', {
               position: "top-right",
               autoClose: 5000,
@@ -72,6 +72,8 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
     const syncSeek = (data) => {
       if (!idRef.current) return;
+      if(reciveruser.current===idRef.current){ 
+      
       isExternalSeek.current = true;
       syncplaying.current=true;
       // Mark as external seek
@@ -85,6 +87,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
           syncplaying.current=false;
           playerRef.current.playVideo()
       }, 1000);
+    }
   };
   
     const syncUrl = (data) =>{
@@ -93,6 +96,7 @@ console.log(idRef.current,data);
 
       if(data.senderid==idRef.current)
      { console.log("Inside sync url");
+      reciveruser.current=data.senderid
       const videoId = extractVideoId(data.url);
       senderUrlDataIdRef.current = videoId;
       createPlayer(videoId);
