@@ -16,8 +16,15 @@ function Messagesmall({ socket }) {
   const [isLoading, setisLoading] = useState(false);
   const dispatch = useDispatch();
   const selector = useSelector((state) => state.user);
-
   
+  
+  
+  
+    useEffect(()=>{
+  grabuser.current=userstate
+  console.log(grabuser.current);
+  
+    },[userstate])
 
   useEffect(() => {
     scrollToBottom();
