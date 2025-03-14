@@ -31,6 +31,12 @@ io.on("connection",(socket)=>{
         delete userSocketMap[userID];
         io.emit('getOnlineUsers',Object.keys(userSocketMap));
     })
+
+        
+        socket.on("sendmyId", ({ userBid }) => {
+            console.log(`Emitting to socket ID: ${userBid}`);
+            io.to(userBid).emit("recivedIDfromSocket", { userBid });
+        });
 })
 
 export {io,app,server};

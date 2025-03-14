@@ -18,6 +18,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const isExternalSeek = useRef(false);
   const syncplaying = useRef(false);
   const reciveruser=useRef()
+  const recivedID=useRef()
 
   useEffect(() => {
     if (selector?.user?._id) {
@@ -48,32 +49,23 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     const syncVideoState = (data) => {
 console.log(reciveruser.current,idRef.current);
 
-      if(reciveruser.current===idRef.current){ 
+      if(reciveruser.current===idRef.current||recivedIDfromSocket){ 
       console.log("Syncing play/pause:", data);
       isPlayingRef.current = data;
       togglePlayPause();
     }
     };
 
-    const isUserBusy= () => {
+    const recivedIDfromSocket=(data)=>{
+      console.log("recivedIDfromSocket",data);
+      recivedID.current=data
+      
+    }
 
-          toast.warn(' User is busy!', {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: false,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-              transition: Bounce,
-          });
-  }
-  
 
     const syncSeek = (data) => {
       if (!idRef.current) return;
-      if(reciveruser.current===idRef.current){ 
+      if(reciveruser.current===idRef.current||recivedID.current){ 
       
       isExternalSeek.current = true;
       syncplaying.current=true;
@@ -90,23 +82,38 @@ console.log(reciveruser.current,idRef.current);
       }, 1000);
     }
   };
+
+   
   
     const syncUrl = (data) =>{
       console.log("Inside URL")
 console.log(idRef.current,data);
-
       if(data.senderid==idRef.current)
      { console.log("Inside sync url");
       reciveruser.current=data.senderid
+      socket.emit("sendmyId", { userBid: socket.id });
       const videoId = extractVideoId(data.url);
       senderUrlDataIdRef.current = videoId;
       createPlayer(videoId);
+      
      }
      else{
-      socket.emit("isUserBusy",true);
+      socket.emit("isUserBusy", { isBusy: true, senderId: idRef.current });
+
      }
     };
-    socket.on("isUserBusy", isUserBusy);
+    socket.on("recivedIDfromSocket", recivedIDfromSocket);
+    socket.on("isUserBusy", (data) => {
+      console.log("Received 'isUserBusy':", data);
+      if (data.isBusy) {
+        toast.warn('User is busy!', {
+          position: "top-right",
+          autoClose: 5000,
+          theme: "dark"
+        });
+      }
+    });
+    
     socket.on("play_pause", syncVideoState);
     socket.on("seek", syncSeek);
     socket.on("send_url", syncUrl);

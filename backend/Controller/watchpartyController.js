@@ -15,6 +15,8 @@ console.log("RECiveriDDDDDD",receiverid);
 
     if(ReciverSocketId) io.to(ReciverSocketId).emit("send_url",{url,senderid});
 
+    
+
     res.status(201).json({
         success: true,
         message:"Url send",
