@@ -17,7 +17,6 @@ function UserProfile() {
     const isPageRefreshed = localStorage.getItem('isPageRefreshed');
     
     if (isPageRefreshed) {
-
       navigate('/userhome');
     } else {
  
@@ -33,7 +32,9 @@ function UserProfile() {
     const dataFromSlice=useSelector((state)=>state.user)
     const userimghandler=(e)=>{
       if(e.target)
-        navigate('/userhome');
+        navigate('/userhome',{
+      state:true
+      });
     }
       
   return (

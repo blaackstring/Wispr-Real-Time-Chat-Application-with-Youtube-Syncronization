@@ -109,14 +109,14 @@ useEffect(()=>{
 
   return (
     <>
-      <div className={`userhome flex   justify-between flex-col w-[100vw] sm:w-full lg:w-[80vw]   lg:h-[87vh] h-[98vh] border-blue-400 shadow-[0_0_5px_5px_rgba(59,130,246,0.5)] ${iswatchparty ? 'hidden' : 'block'}`}>
+      <div className={`userhome flex   justify-between flex-col w-[100vw] sm:w-full lg:w-[80vw]   lg:h-[87vh] h-screen border-blue-400 shadow-[0_0_5px_5px_rgba(59,130,246,0.5)] ${iswatchparty ? 'hidden' : 'block'}`}>
 
         <nav className="h-[9vh] flex justify-evenly  items-center bg-black/20 p-2">
           <InputShad setSearchUser={setSearchUser} ref={ref} />
           {SearchUser?.length > 0 && (
-                <div className="w-fit ml-2 h-fit  bg-white">
+                <div className="w-fit ml-2 h-fit rounded-2xl hover:bg-blue-600  bg-white">
                   <ArrowBigLeftDashIcon
-                    className="  w-10 h-10"
+                    className="  w-8 h-8 rounded-2xl cursor-pointer"
                     onClick={handleAllUser}
                   />
                 </div>
@@ -141,13 +141,13 @@ useEffect(()=>{
 
 
           <div>
-            <button className="bg-white w-18 text-l rounded-2xl hover:cursor-pointer hover:bg-black hover:text-white p-2" onClick={()=>handleLogout()}>LogOut</button>
+            <button className="bg-black w-18 text-l text-white rounded-2xl hover:cursor-pointer hover:bg-white hover:text-white p-2 inset-ring-4 inset-ring-blue-500" onClick={()=>handleLogout()}>LogOut</button>
           </div>
         </nav>
 
         <div className="flex  flex-1  p-1 justify-center h-[65vh] items-stretch relative top-1">
           {(isclicked || width > 900) && (
-            <div className="left bg-[#08161e] lg:w-[20vw] overflow-y-auto   w-full">
+            <div className="left bg-[#272a2c] lg:w-[20vw] overflow-y-auto   w-full">
               {SearchUser?.length > 0 ? (
                 <div className="flex-1 w-full text-white  ">
                   {SearchUser?.map((recent) => (
@@ -185,7 +185,7 @@ useEffect(()=>{
           )}
           
 
-          <div className="right flex justify-center items-center  flex-1 w-full  ">
+          <div className="right   flex-1 w-full bg-amber-400 ">
             {ispending ? <Loader /> : (socket && (
               <Message
                 socket={socket}

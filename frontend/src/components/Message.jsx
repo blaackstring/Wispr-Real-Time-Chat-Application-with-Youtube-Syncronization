@@ -109,7 +109,7 @@ console.log(grabuser.current);
         ...prev,
         { senderid: selector.userid, messageContent: msg, _id: Date.now() },
       ]);
-
+      setisLoading(false);
       // ✅ Update Recent Chat Users
       const stack = await getRecentUsers(userstate.user._id);
       dispatch(setRecentUsers({ recentUsers: stack.recentUsers }));
@@ -121,7 +121,7 @@ console.log(grabuser.current);
         messageContent: msg,
       });
 
-      setisLoading(false);
+      
     }
     e.target.reset();
     scrollToBottom();
@@ -129,10 +129,10 @@ console.log(grabuser.current);
 
 
   return (
-   <div className="w-full h-full">
+   <div className="w-full bg-amber-600 h-full">
     <div className={`w-full h-full ${iswatchparty?'hidden':'block'}`}>
       {(!isclicked || width > 900) && (
-        <div className="msg h-full w-full flex  justify-center items-center flex-col">
+        <div className="msg h-full bg-amber-300 w-full flex overflow-x-hidden justify-center items-center flex-col">
           {/* ✅ Header Section */}
           {!userstate.clicked ? (
             <div className="lg:text-xl relative top-[-40px] text-lg font-bold text-white text-center">
@@ -178,7 +178,7 @@ console.log(grabuser.current);
           )}
 
           {/* ✅ Message Container */}
-        {<div className="msgcontent flex flex-col min-h-[61vh] w-full p-1 overflow-y-auto">
+        {<div className="msgcontent flex flex-col sm:min-h-[74vh] lg:min-h-[55vh] w-full p-1 overflow-y-auto">
             {allmsg?.length > 0 &&
               allmsg?.map((msg) => (
                 <div className="w-full h-full " key={msg._id}>
@@ -207,18 +207,18 @@ console.log(grabuser.current);
 
 
           {userstate.clicked && (
-            <div className="w-full  p-1">
+            <div className="w-full  p-1 ">
               <form className="w-full flex" onSubmit={handleform}>
                 <input
                   type="text"
-                  className="min-w-[80%] h-9 p-2 rounded-2xl mr-1 text-white bg-[#2A3942] outline-none border-none"
+                  className="min-w-[80%] h-9 p-2 rounded-l mr-1 text-white bg-[#2A3942] outline-none border-none"
                   placeholder="Message"
                   name="msg"
                   autoComplete="off"
                   onChange={() => socket.emit("user_typing", { senderId: selector.userid })}
                 />
                   <button
-              className="ml-2 w-full h-9 text-white flex items-center justify-center bg-blue-500 rounded-xl"
+              className="ml-2 w-40 h-9 lg:mb-0 sm:mb-4 text-white flex items-center justify-center bg-blue-500 rounded-l"
               type="submit"
             >
               {isLoading ? <Loader /> : <Send />}

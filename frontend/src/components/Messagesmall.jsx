@@ -71,10 +71,10 @@ function Messagesmall({ socket }) {
   };
 
   return (
-    <div className=" h-full lg:w-[33vw]   flex justify-center  items-center mt-4">
-      <div className="chat-container w-[35vw] min-w-[300px] max-w-[800px] bg-[#29373d] text-white flex flex-col">
+    <div className="h-[55vh]  lg:w-[33vw]   ">
+      <div className="chat-container h-fit lg:h-full w-[35vw] min-w-[300px] max-w-[800px] bg-[#29373d] text-white flex flex-col">
         {/* Header */}
-        <div className="flex items-center bg-[#2A3942] p-2">
+        <div className="flex items-center  p-2">
           {userstate?.user?.ProfilePic && (
             <img
               src={userstate?.user?.ProfilePic||''}
@@ -93,7 +93,7 @@ function Messagesmall({ socket }) {
         </div>
 
         {/* Messages */}
-        <div className="msgcontent flex flex-col max-h-[50vh] lg:h-[40vh] h-[25vh]  sm:h-[25vh]  p-1 overflow-y-auto">
+        <div className="msgcontent flex flex-col max-h-[55vh] lg:h-[46vh] h-[25vh]  sm:h-[25vh]  p-1 overflow-y-auto">
             {allmsg?.length > 0 &&
               allmsg?.map((msg) => (
                 <div className="w-full h-full " key={msg._id}>
@@ -122,7 +122,7 @@ function Messagesmall({ socket }) {
           </div>
 
         {/* Input Field */}
-        <div className="p-2 bg-[#2A3942] h-[7vh]">
+        <div className="p-2 bg-[#2b3237] h-fit flex-row ">
           <form className="flex" onSubmit={handleform}>
             <input
               type="text"

@@ -177,49 +177,60 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   };
 
   return (
-    <div className="wdiv min-h-[100vh] w-[100vw] flex justify-center items-center overflow-hidden sm:h-[100vh] sm:p-6 md:p-8 lg:p-10 relative">
-      <nav>
-        <div className="w-[80vw] absolute top-0 left-10 flex items-center justify-center">
-          <div className="text-[#E50914] text-[30px] lg:text-4xl font-extrabold mb-3">
+    <div className="wdiv min-h-[100vh] w-[100vw]  overflow-hidden sm:h-[100vh] relative ">
+      <nav className="w-[95vw] h-10 lg:h-14 flex pl-3 pt-2 items-center">
+        <div className="w-full  flex justify-start items-center mt-2">
+          <div className="text-[#E50914] text-[30px] lg:text-4xl font-extrabold mb-3 shadow-">
             Watch-Party
           </div>
         </div>
         <button
           onClick={handleClose}
-          className="absolute top-2 right-4 text-white text-2xl font-bold cursor-pointer bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
+          className="absolute top-1 right-3 text-white text-xl font-bold cursor-pointer bg-gray-800 p-2 rounded-full hover:bg-gray-700 transition"
         >
           ✖
         </button>
       </nav>
-
-      <div className="flex w-screen-[85%] h-full flex-col items-center justify-items-center lg:flex-row p-4 overflow-hidden">
-        <div className="left mb-5">
-          <div className="w-full mt-6 flex flex-col items-center space-y-4 px-4 sm:px-6 md:px-8">
-            <form
+      <div className="w-full bloc mt-7 mb-5 ">
+        <form
               onSubmit={handleForm}
-              className="w-full flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3"
+              className=" flex flex-row sm:flex-row  justify-center items-center w-full "
             >
               <input
                 ref={inputRef}
                 type="text"
                 placeholder="Enter YouTube URL"
-                className="w-full p-2 rounded-lg border text-white bg-black/50 border-gray-400 focus:outline-none focus:border-blue-500"
+                className=" p-2 rounded-lg border lg:w-[20vw] text-white bg-black/50 border-gray-400 focus:outline-none focus:border-blue-500"
                 onChange={handleInputChange}
               />
               <button
                 type="submit"
-                className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
+                className="bg-black w-20 m-2  text-white  p-2 rounded-lg hover:bg-gray-800 transition"
               >
                 Search
               </button>
             </form>
+        </div>
+      <div className="flex flex-1 mt-5 flex-col justify-around items-end  overflow-hidden">
 
-            <div className="max-w-[800px] lg:w-[700px] h-[200px] w-[365px] md:w-[450px] sm:h-[200px] sm:w-[350px] md:h-[280px] lg:h-[405px] rounded-lg shadow-lg">
+        
+
+      <div className=" h-full w-full justify-center mt-5 flex lg:flex-row items-center flex-col">
+
+
+      <div className="left  ">
+            <div className="max-w-[800px] lg:w-[700px] h-[200px]  w-[345px] md:w-[450px] sm:h-[200px] sm:w-[350px] md:h-[280px] lg:h-[405px] rounded-lg shadow-lg">
               <div id="youtube-player" className="w-full h-full"></div>
-            </div>
           </div>
         </div>
+        <div className="right lg:mt-0 mt-4 lg:ml-4">
         <Messagesmall socket={socket} />
+        </div>
+
+
+
+
+      </div>
       </div>
     </div>
   );
