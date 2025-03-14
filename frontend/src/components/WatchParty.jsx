@@ -44,7 +44,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     };
 
     socket.on("isUserBusy", (data) => {
-      if (data.isUserBusy) {
+      if (data) {
           toast.warn('🦄 User is busy!', {
               position: "top-right",
               autoClose: 5000,
@@ -87,7 +87,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       createPlayer(videoId);
      }
      else{
-      socket.emit("isUserBusy",{isUserBusy:true});
+      socket.emit("isUserBusy",true);
      }
     };
     socket.on("isUserBusy", isUserBusy);
