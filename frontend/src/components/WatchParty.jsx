@@ -55,9 +55,9 @@ console.log(reciveruser.current,idRef.current);
     }
     };
 
-    const isUserBusy= (data) => {
-      if (data) {
-          toast('🦄 User is busy!', {
+    const isUserBusy= () => {
+
+          toast.warn(' User is busy!', {
               position: "top-right",
               autoClose: 5000,
               hideProgressBar: false,
@@ -68,7 +68,6 @@ console.log(reciveruser.current,idRef.current);
               theme: "dark",
               transition: Bounce,
           });
-      }
   }
   
 

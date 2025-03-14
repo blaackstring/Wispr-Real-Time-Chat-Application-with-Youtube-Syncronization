@@ -16,15 +16,15 @@ function Messagesmall({ socket }) {
   const [isLoading, setisLoading] = useState(false);
   const dispatch = useDispatch();
   const selector = useSelector((state) => state.user);
-  
-  
-  
+  const grabuser=useRef()
   
     useEffect(()=>{
   grabuser.current=userstate
   console.log(grabuser.current);
   
     },[userstate])
+
+  
 
   useEffect(() => {
     scrollToBottom();
@@ -106,7 +106,7 @@ function Messagesmall({ socket }) {
         </div>
 
         {/* Messages */}
-        <div className="msgcontent flex flex-col max-h-[55vh] lg:h-[46vh] h-[25vh]  sm:h-[25vh]  p-1 overflow-y-auto">
+        <div className="msgcontent flex flex-col max-h-[55vh] lg:h-[46vh] h-[27vh]  sm:h-[25vh] overflow-x-hidden p-1 overflow-y-auto">
             {allmsg?.length > 0 &&
               allmsg?.map((msg) => (
                 <div className="w-full h-full " key={msg._id}>
