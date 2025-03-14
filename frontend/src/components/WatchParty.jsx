@@ -80,13 +80,15 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     const syncUrl = (data) =>{
       const {url,reciverId, ReciverSocketId}=data
       console.log("Syncing URL:", data);
-      if(reciverId== idRef.current)
+      if(reciverId==idRef.current)
      {
       const videoId = extractVideoId(url);
       senderUrlDataIdRef.current = videoId;
       createPlayer(videoId);
      }
      else{
+      console.log(url,reciverId,ReciverSocketId);
+      
       socket.to( ReciverSocketId).emit("isUserBusy",{isUserBusy:true});
      }
     };
