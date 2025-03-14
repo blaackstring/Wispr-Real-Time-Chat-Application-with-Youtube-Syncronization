@@ -93,7 +93,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     const syncUrl = (data) =>{
       console.log("Inside URL")
 console.log(idRef.current,data);
-
+reciveruser.current=data.senderid
       if(data.senderid==idRef.current)
      { console.log("Inside sync url");
       reciveruser.current=data.senderid
@@ -196,7 +196,7 @@ console.log(idRef.current,data);
   };
 
   const togglePlayPause = () => {
-    if (playerRef.current) {
+    if (playerRef.current&&reciveruser.current) {
       if (isPlayingRef.current) {
         playerRef.current.playVideo();
       } else {
