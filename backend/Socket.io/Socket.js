@@ -1,3 +1,4 @@
+import { log } from "console";
 import express from "express";
 import http from 'http';
 import { Server } from "socket.io";
@@ -34,8 +35,12 @@ io.on("connection",(socket)=>{
 
         
         socket.on("sendmyId", ({ userBid }) => {
+
+           const res= getReciverSocketId({userBid})
+           console.log(res);
+           
             console.log(`Emitting to socket ID: ${userBid}`);
-            io.to(userBid).emit("recivedIDfromSocket", { userBid });
+            io.to(res).emit("recivedIDfromSocket", res );
         });
 })
 

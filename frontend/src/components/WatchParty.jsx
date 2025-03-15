@@ -94,14 +94,14 @@ console.log(idRef.current,data);
       if(data.senderid==idRef.current)
      { console.log("Inside sync url");
       reciveruser.current=data.senderid
-      socket.emit("sendmyId", { userBid: socket.id });
+      socket.emit("sendmyId", { userBid: idRef.current });
       const videoId = extractVideoId(data.url);
       senderUrlDataIdRef.current = videoId;
       createPlayer(videoId);
       
      }
      else{
-      socket.emit("isUserBusy", { isBusy: true, senderId: idRef.current });
+      socket.emit("isUserBusy", { isBusy: true, senderId:data.senderId});
 
      }
     };
