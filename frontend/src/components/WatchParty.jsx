@@ -18,6 +18,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const userRef=useRef()
   const isExternalSeek = useRef(false);
   const syncplaying = useRef(false);
+  const ReciverSocketId=useRef()
 
   useEffect(() => {
     if (selector?.user?._id) {
@@ -46,11 +47,9 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
   useEffect(() => {
     const syncVideoState = (data) => {
-console.log(data);
-
+      console.log(data);
       if(data.senderid===idRef.current){ 
       console.log("Syncing play/pause:", data);
-    if(ReciverSocketId) io.to(ReciverSocketId).emit("play_pause",{isPlayed,senderid});
       isPlayingRef.current = data.isPlayed;
       togglePlayPause();
     }
@@ -59,13 +58,12 @@ console.log(data);
 
     const syncSeek = (data) => {
       if (!idRef.current) return;
-      console.log("FRom SyncSEEKKKKK:",data);
+      console.log("FRom SyncSEEKKKKK:",data,idRef.current);
       if(data.senderid===idRef.current){ 
       isExternalSeek.current = true;
       syncplaying.current=true;
       playerRef.current.seekTo(data.seekTo,false);
       setTimeout(() => {
-      
           isExternalSeek.current = false;
           syncplaying.current=false;
           playerRef.current.playVideo()
@@ -74,17 +72,15 @@ console.log(data);
   };
 
     const syncUrl = (data) =>{
-      console.log("Inside URL")
-     console.log(idRef.current,data);
+      console.log("Inside URL",idRef.current,data)
    if(String(data.senderid) === String(idRef.current))  
-       { console.log("Inside sync url");
+       { 
          const videoId = extractVideoId(data.url);
          senderUrlDataIdRef.current = videoId;
          createPlayer(videoId);
         }
       else{
        socket.emit("isUserBusy", { isBusy: true, senderId:data.senderId});
-
       }
    };
     socket.on("isUserBusy", (data) => {

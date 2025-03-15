@@ -48,7 +48,7 @@ export const PlayorPaused=(req,res)=>{
     res.status(201).json({
         success: true,
         message:"play or paused successfuly",
-        isPlaying
+        isPlayed
     });
 }
 catch (error) {
