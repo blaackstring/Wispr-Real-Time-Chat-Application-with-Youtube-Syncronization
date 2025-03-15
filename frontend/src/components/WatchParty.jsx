@@ -62,7 +62,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       if(data.senderid===idRef.current){ 
       isExternalSeek.current = true;
       syncplaying.current=true;
-      playerRef.current.seekTo(data.seekTo,false);
+      playerRef.current.seekTo(data.seekTo,true);
       setTimeout(() => {
           isExternalSeek.current = false;
           syncplaying.current=false;

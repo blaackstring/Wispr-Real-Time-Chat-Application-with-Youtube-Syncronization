@@ -49,7 +49,7 @@ export const seeked=async(data,id,senderid)=>{
             headers: {
                 "Content-Type": "application/json",
             },
-            body:JSON.stringify({seekTo:data})
+            body:JSON.stringify({seekTo: Number(data)})
         })
         console.log(data,'seek');
         console.log(res);
