@@ -3,7 +3,9 @@ import { playorpaused, seeked, sendurl } from "@/Controllers/watchPartyControlle
 import { useSelector } from "react-redux";
 import './watchparty.css';
 import Messagesmall from "./Messagesmall";
+
 import { toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { data } from "react-router-dom";
 
 function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
@@ -47,7 +49,6 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
   useEffect(() => {
     const syncVideoState = (data) => {
-      console.log(data);
       if(data.senderid===idRef.current){ 
       console.log("Syncing play/pause:", data);
       isPlayingRef.current = data.isPlayed;
@@ -58,7 +59,6 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
     const syncSeek = (data) => {
       if (!idRef.current) return;
-      console.log("FRom SyncSEEKKKKK:",data,idRef.current);
       if(data.senderid===idRef.current){ 
       isExternalSeek.current = true;
       syncplaying.current=true;
@@ -72,7 +72,6 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   };
 
     const syncUrl = (data) =>{
-      console.log("Inside URL",idRef.current,data)
    if(String(data.senderid) === String(idRef.current))  
        { 
          const videoId = extractVideoId(data.url);
@@ -80,17 +79,23 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
          createPlayer(videoId);
         }
       else{
-       socket.emit("isUserBusy", { isBusy: true, senderId:data.senderId});
+       socket.emit("isUserBusy", true);
       }
    };
     socket.on("isUserBusy", (data) => {
-      console.log("Received 'isUserBusy':", data);
-      if (data.isBusy) {
-        toast.warn('User is busy!', {
+      console.log("Received 'isUserBusy':",data);
+      if (data) {
+        toast.warn('🦄 Login SuccessFull!', {
           position: "top-right",
           autoClose: 5000,
-          theme: "dark"
-        });
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          transition: Bounce,
+          });
       }
     });
     socket.on("play_pause", syncVideoState);
@@ -99,8 +104,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
     return () => {
       socket.off("isUserBusy", (data) => {
-        console.log("Received 'isUserBusy':", data);
-        if (data.isBusy) {
+        if (data) {
           toast.warn('User is busy!', {
             position: "top-right",
             autoClose: 5000,
