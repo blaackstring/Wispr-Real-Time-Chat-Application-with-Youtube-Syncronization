@@ -71,7 +71,7 @@ console.log(reciveruser.current,idRef.current);
       syncplaying.current=true;
       // Mark as external seek
      
-      playerRef.current.seekTo(data,true);
+      playerRef.current.seekTo(data,false);
       
       
       setTimeout(() => {
