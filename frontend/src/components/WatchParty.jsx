@@ -48,7 +48,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
   useEffect(() => {
     const syncVideoState = (data) => {
-console.log(reciveruser.current,idRef.current);
+console.log(reciveruser.current,idRef.current,recivedID.current);
 
       if(reciveruser.current===idRef.current||recivedID.current){ 
       console.log("Syncing play/pause:", data);
