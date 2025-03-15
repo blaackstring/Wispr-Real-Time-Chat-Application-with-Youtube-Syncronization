@@ -36,8 +36,8 @@ io.on("connection",(socket)=>{
         
         socket.on("sendmyId", ({ userBid }) => {
 
-           const res= getReciverSocketId({userBid})
-           console.log(res);
+           const res= getReciverSocketId(userBid)
+           console.log(res,"HEllo fro, IO");
            
             console.log(`Emitting to socket ID: ${userBid}`);
             io.to(res).emit("recivedIDfromSocket", res );
