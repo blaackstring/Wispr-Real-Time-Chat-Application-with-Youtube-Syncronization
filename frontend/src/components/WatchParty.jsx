@@ -58,7 +58,8 @@ console.log(reciveruser.current,idRef.current);
 
     const recivedIDfromSocket=(data)=>{
       console.log("recivedIDfromSocket",data);
-      recivedID.current=data
+      recivedID.current=data.userBid
+      
       
     }
 
