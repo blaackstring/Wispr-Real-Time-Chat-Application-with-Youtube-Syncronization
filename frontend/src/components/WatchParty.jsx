@@ -65,6 +65,8 @@ console.log(reciveruser.current,idRef.current);
 
     const syncSeek = (data) => {
       if (!idRef.current) return;
+      console.log("FRom SyncSEEKKKKK:",recivedID.current);
+      
       if(reciveruser.current===idRef.current||recivedID.current){ 
       
       isExternalSeek.current = true;
