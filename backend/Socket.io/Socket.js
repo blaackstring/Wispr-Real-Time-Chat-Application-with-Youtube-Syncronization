@@ -10,7 +10,7 @@ const server=http.createServer(app);
 
 const io=new Server(server,{
     cors:{
-        origin: [process.env.ORIGIN || "http://localhost:5173"],
+        origin:  [process.env.ORIGIN || "http://localhost:5173"],
         methods:["GET","POST"]
     }
 }); 
@@ -32,16 +32,21 @@ io.on("connection",(socket)=>{
         delete userSocketMap[userID];
         io.emit('getOnlineUsers',Object.keys(userSocketMap));
     })
-
         
-        socket.on("sendmyId", ({ userBid }) => {
-
-           const res= getReciverSocketId(userBid)
-           console.log(res,"HEllo fro, IO");
-           
-            console.log(`Emitting to socket ID: ${userBid}`);
-            io.to(res).emit("recivedIDfromSocket", res );
-        });
+    socket.on("sendmyId", ({ userBid }) => {
+        console.log({ userBid }, "from emit");
+        const res = getReciverSocketId(userBid);
+    console.log(res,"FORM SSEND ID");
+    
+        if (res) {
+            console.log(res, "Hello from IO");
+            console.log(`Emitting to socket ID: ${res}`);
+            io.to(res).emit("recivedIDfromSocket", { userBid: res });
+        } else {
+            console.error("Receiver socket ID not found!");
+        }
+    });
+    
 })
 
 export {io,app,server};

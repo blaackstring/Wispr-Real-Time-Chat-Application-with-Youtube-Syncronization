@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import './watchparty.css';
 import Messagesmall from "./Messagesmall";
 import { toast, Bounce } from 'react-toastify';
+import { data } from "react-router-dom";
 
 function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const urlRef = useRef("");
@@ -49,19 +50,12 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     const syncVideoState = (data) => {
 console.log(reciveruser.current,idRef.current);
 
-      if(reciveruser.current===idRef.current||recivedIDfromSocket){ 
+      if(reciveruser.current===idRef.current||recivedID.current){ 
       console.log("Syncing play/pause:", data);
       isPlayingRef.current = data;
       togglePlayPause();
     }
     };
-
-    const recivedIDfromSocket=(data)=>{
-      console.log("recivedIDfromSocket",data);
-      recivedID.current=data.userBid
-      
-      
-    }
 
 
     const syncSeek = (data) => {
@@ -69,7 +63,6 @@ console.log(reciveruser.current,idRef.current);
       console.log("FRom SyncSEEKKKKK:",recivedID.current);
       
       if(reciveruser.current===idRef.current||recivedID.current){ 
-      
       isExternalSeek.current = true;
       syncplaying.current=true;
       // Mark as external seek
@@ -86,12 +79,12 @@ console.log(reciveruser.current,idRef.current);
     }
   };
 
-   
+
   
     const syncUrl = (data) =>{
       console.log("Inside URL")
 console.log(idRef.current,data);
-      if(data.senderid==idRef.current)
+if (String(data.senderid) === String(idRef.current))
      { console.log("Inside sync url");
       reciveruser.current=data.senderid
       socket.emit("sendmyId", { userBid: idRef.current });
@@ -105,7 +98,14 @@ console.log(idRef.current,data);
 
      }
     };
-    socket.on("recivedIDfromSocket", recivedIDfromSocket);
+
+
+
+
+    socket.on("recivedIDfromSocket", (data) => {
+      console.log("recivedIDfromSocket", data); 
+      recivedID.current = data.userBid;
+  });
     socket.on("isUserBusy", (data) => {
       console.log("Received 'isUserBusy':", data);
       if (data.isBusy) {
@@ -116,12 +116,21 @@ console.log(idRef.current,data);
         });
       }
     });
-    
     socket.on("play_pause", syncVideoState);
     socket.on("seek", syncSeek);
     socket.on("send_url", syncUrl);
 
     return () => {
+      socket.off("isUserBusy", (data) => {
+        console.log("Received 'isUserBusy':", data);
+        if (data.isBusy) {
+          toast.warn('User is busy!', {
+            position: "top-right",
+            autoClose: 5000,
+            theme: "dark"
+          });
+        }
+      });
       socket.off("play_pause", syncVideoState);
       socket.off("seek", syncSeek);
       socket.off("send_url", syncUrl);
