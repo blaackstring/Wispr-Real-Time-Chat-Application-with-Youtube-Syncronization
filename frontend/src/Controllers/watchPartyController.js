@@ -17,9 +17,9 @@ export const sendurl=async(url,id,senderid)=>{
     }
 }
 
-export const playorpaused=async(data,id)=>{
+export const playorpaused=async(data,id,senderid)=>{
     try {
-        const res= await fetch(`/api/watchparty/play_pause/${id}`,{
+        const res= await fetch(`/api/watchparty/play_pause/${id}/${senderid}`,{
             method:"POST",
             credentials:"include",
             headers: {
@@ -41,9 +41,9 @@ export const playorpaused=async(data,id)=>{
 
 
 
-export const seeked=async(data,id)=>{
+export const seeked=async(data,id,senderid)=>{
     try {
-        const res= await fetch(`/api/watchparty/seek/${id}`,{
+        const res= await fetch(`/api/watchparty/seek/${id}/${senderid}`,{
             method:"POST",
             credentials:"include",
             headers: {

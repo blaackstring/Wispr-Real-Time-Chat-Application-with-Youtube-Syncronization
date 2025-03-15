@@ -37,13 +37,13 @@ console.log("RECiveriDDDDDD",receiverid);
 
 export const PlayorPaused=(req,res)=>{
     try {
-        const {id:receiverid}=req.params;
-    const isPlaying=req.body.isPlaying
+        const {id:receiverid,senderid}=req.params;
+    const isPlayed=req.body.isPlaying
   
     const ReciverSocketId=getReciverSocketId(receiverid);
     console.log(ReciverSocketId,"From db");
     
-    if(ReciverSocketId) io.to(ReciverSocketId).emit("play_pause",isPlaying);
+    if(ReciverSocketId) io.to(ReciverSocketId).emit("play_pause",{isPlayed,senderid});
 
     res.status(201).json({
         success: true,
@@ -66,12 +66,12 @@ catch (error) {
 
 export const seek=(req,res)=>{
     try {
-        const {id:receiverid}=req.params;
+        const {id:receiverid,senderid}=req.params;
     const seekTo=req.body.seekTo
 
     const ReciverSocketId=getReciverSocketId(receiverid);
 
-    if(ReciverSocketId) io.to(ReciverSocketId).emit("seek",seekTo);
+    if(ReciverSocketId) io.to(ReciverSocketId).emit("seek",{seekTo,senderid});
 
     console.log("FROMDB SEEK",ReciverSocketId);
     
