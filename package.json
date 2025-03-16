@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon backend/index.js",
     "start": "nodemon backend/index.js",
-"build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "",
@@ -27,5 +27,8 @@
     "nodemon": "^3.1.9",
     "path": "^0.12.7",
     "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "sass-embedded": "^1.85.1"
   }
 }
