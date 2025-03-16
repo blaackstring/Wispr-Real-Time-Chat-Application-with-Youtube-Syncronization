@@ -55,16 +55,7 @@ io.on("connection", (socket) => {
     
         const targetSocket = io.sockets.sockets.get(getReciverSocketId(targetId));
     
-        const targetUserRooms = Array.from(targetSocket?.rooms || []);
-        const isBusy = targetUserRooms.some(room => 
-            room.includes("_") && room !== targetSocket?.id
-        );
-    
-        if (isBusy) {
-            console.log(`Target user ${targetId} is already busy in another room.`);
-            return;
-        }
-    
+      
         const roomId = [userId, targetId].sort().join("_");
         io.to(roomId).emit("update_state", state);
     });
@@ -72,17 +63,7 @@ io.on("connection", (socket) => {
     socket.on("seek", ({ userId, targetId, timestamp }) => {
         if (!userId || !targetId || timestamp === undefined) return;  
     
-        const targetSocket = io.sockets.sockets.get(getReciverSocketId(targetId));
-    
-        const targetUserRooms = Array.from(targetSocket?.rooms || []);
-        const isBusy = targetUserRooms.some(room => 
-            room.includes("_") && room !== targetSocket?.id
-        );
-    
-        if (isBusy) {
-            console.log(`Target user ${targetId} is already busy in another room.`);
-            return;
-        }
+       
     
         const roomId = [userId, targetId].sort().join("_");
         io.to(roomId).emit("update_seek", timestamp);
