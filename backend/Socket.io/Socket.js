@@ -30,24 +30,44 @@ io.on("connection", (socket) => {
 
     socket.on("send_url", ({ userId, targetId, vdourl }) => {
         if (!userId || !targetId || !vdourl) return;  // ✅ Data validation
-
+    
+        // Check if the socket is already in another room
+        const userRooms = Array.from(socket.rooms);
+        if (userRooms.length > 1) {
+            console.log("User is already in another room:", userRooms);
+            return;  // Exit if the user is already in another room
+        }
+    
         const roomId = [userId, targetId].sort().join("_");
         console.log("sendurl", userId, targetId, vdourl, roomId);
-        const targetSocket = io.sockets.sockets.get(getReciverSocketId(targetId));  
+    
+        const targetSocket = io.sockets.sockets.get(getReciverSocketId(targetId));
         targetSocket?.join(roomId);  
         socket.join(roomId); 
         io.to(roomId).emit("receive_url", vdourl);
     });
+    
 
     socket.on("play_pause", ({ userId, targetId, state }) => {
-        if (!userId || !targetId) return;  // ✅ Data validation
+
         
+        if (!userId || !targetId) return;  // ✅ Data validation
+        const userRooms = Array.from(socket.rooms);
+        if (userRooms.length > 1) {
+            console.log("User is already in another room:", userRooms);
+            return;  // Exit if the user is already in another room
+        }
         const roomId = [userId, targetId].sort().join("_");
         io.to(roomId).emit("update_state", state);
     });
 
     socket.on("seek", ({ userId, targetId, timestamp }) => {
-        if (!userId || !targetId || timestamp === undefined) return; // ✅ Data validation
+        if (!userId || !targetId || timestamp === undefined) return;
+        const userRooms = Array.from(socket.rooms);
+        if (userRooms.length > 1) {
+            console.log("User is already in another room:", userRooms);
+            return;  // Exit if the user is already in another room
+        } // ✅ Data validation
         
         const roomId = [userId, targetId].sort().join("_");
         io.to(roomId).emit("update_seek", timestamp);
