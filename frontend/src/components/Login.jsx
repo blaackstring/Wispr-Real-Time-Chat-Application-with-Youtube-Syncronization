@@ -8,13 +8,14 @@ import { AuthLogin } from "@/store/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Spin from "./ui/Spin";
 
 
 
 function Login() {
 const dispatch=useDispatch()
   // const selector=useSelector((state)=>state.user) //state is the whole redux store and state.user → The user slice(jo tumne slice banai hai) from the store (because in store.js, you named it user).
- 
+ const [isLoading,setisLoading]=useState(false)
   const navigate=useNavigate()
     const [formdata,setFormData] =useState({
         email: '',
@@ -23,17 +24,16 @@ const dispatch=useDispatch()
     const handleSubmit=async(e)=>{
       try {
         e.preventDefault();
-       
+        
      if(formdata.email!=''&&formdata.password!=''){
+      setisLoading(true)
       console.log(formdata);
       const fetchData = await LoginController(formdata);
 
-
-
       if(fetchData.success===true){
        const {message,user}=fetchData;
-       console.log(user);
     dispatch(AuthLogin({...user}))
+    setisLoading(false)
     navigate('/userhome',{
       replace: true, 
       state:true
@@ -51,7 +51,13 @@ const dispatch=useDispatch()
       });
       
      }
+     else{
+      toast("Invalid Credentials")
+     }
+     setisLoading(false)
      
+    }else{
+      toast("Forget to 😅😅 Enter Email or Password ")
     }
         
       } catch (error) {
@@ -74,11 +80,14 @@ const handleinputchange=(e)=>{
                  <img src={loginImg} alt="" className='w-[100px] h-[100px] '/>
           <form action="" onSubmit={handleSubmit} className="flex items-center flex-col">
 
-          <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded-2xl bg-white" placeholder="Email" name="email" label="Email" />
-            <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded-2xl bg-white" placeholder="Password" name="password"  label="Password"/>
+          <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded-2xl bg-white" placeholder="Email" name="email" label="Email"  />
+            <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded-2xl bg-white" placeholder="Password" name="password" type="password" label="Password"/>
           <Buttons className=" w-full-[-30px]"/>
           </form>
        
+        </div>
+        <div className={`bg absolute  z-30 ${isLoading?'block':'hidden'}`}>
+          <Spin/>
         </div>
       </div>
     );

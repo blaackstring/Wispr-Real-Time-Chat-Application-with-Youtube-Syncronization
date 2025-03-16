@@ -100,32 +100,34 @@ console.log(grabuser.current);
     e.preventDefault();
     const form = new FormData(e.target);
     const msg = form.get("msg");
+
     if (msg.trim() !== "") {
-      setisLoading(true);
+        setisLoading(true);
 
-      // ✅ Send Message to Backend
-      const res = await sendmsg(userstate.user._id, msg);
-      setallmsg((prev) => [
-        ...prev,
-        { senderid: selector.userid, messageContent: msg, _id: Date.now() },
-      ]);
-      setisLoading(false);
-      // ✅ Update Recent Chat Users
-      const stack = await getRecentUsers(userstate.user._id);
-      dispatch(setRecentUsers({ recentUsers: stack.recentUsers }));
+        const res = await sendmsg(userstate.user._id, msg);
+        setallmsg((prev) => [
+            ...prev,
+            { senderid: selector.userid, messageContent: msg, _id: Date.now() },
+        ]);
 
-      // ✅ Emit Message to Socket
-      socket.emit("send_message", {
-        senderId: selector.userid,
-        receiverId: userstate.user._id,
-        messageContent: msg,
-      });
+        setisLoading(false);
 
-      
+        const stack = await getRecentUsers(userstate.user._id);
+        dispatch(setRecentUsers({ recentUsers: stack.recentUsers }));
+
+        socket.emit("send_message", {
+            senderId: selector.userid,
+            receiverId: userstate.user._id,
+            messageContent: msg,
+        });
     }
+
     e.target.reset();
+    e.target.querySelector("input[name='msg']").focus(); // 👈 Focus back to the input
+
     scrollToBottom();
-  };
+};
+
 
 
   return (
@@ -166,10 +168,10 @@ console.log(grabuser.current);
                     <span className="text-xs text-red-400 ml-2">🔴</span>
                   )}
                 </div>
-                <div className="w-full p-1 ml-2 h-full flex justify-end">
+                <div className="w-full p-2 ml-2 h-full flex justify-end">
                 {onlineusrs.current?.includes(userstate.user._id) &&<div className="  text-black  cursor-pointer flex flex-col items-center justify-center" onClick={()=>setiswatchparty(true)}>
-                  <img src={vdoplr} alt="watchparty"  className=" w-9 h-9 rounded"/>
-                 <span className="text-l text-white font-bold">watchparty</span>
+                  <img src={vdoplr} alt="watchparty"  className=" w-8 h-8 rounded-[50%]"/>
+                 <span className="text-l text-white font-bold">Watch-2Gether</span>
                   </div>}
 
                 </div>
@@ -178,7 +180,7 @@ console.log(grabuser.current);
           )}
 
           {/* ✅ Message Container */}
-        {<div className="msgcontent flex flex-col sm:min-h-[72vh] lg:min-h-[55vh] w-full p-1 overflow-y-auto">
+        {<div className="msgcontent flex flex-col sm:min-h-[69vh] lg:min-h-[55vh] w-full p-1 overflow-y-auto">
             {allmsg?.length > 0 &&
               allmsg?.map((msg) => (
                 <div className="w-full h-full " key={msg._id}>
@@ -207,7 +209,7 @@ console.log(grabuser.current);
 
 
           {userstate.clicked && (
-            <div className="w-full  p-1 mb-4">
+            <div className="w-full  p-2">
               <form className="w-full flex" onSubmit={handleform}>
                 <input
                   type="text"

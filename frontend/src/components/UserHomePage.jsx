@@ -174,7 +174,7 @@ useEffect(()=>{
                   ))}
                 </div>
               ) : (
-                <div className="lg:h-[74vh] h-[87vh] overflow-y-scroll  overflow-x-hidden">
+                <div className="lg:h-[74vh] h-[85vh] overflow-y-scroll  overflow-x-hidden">
                   <RecentUser isclicked={isclicked} setisclicked={setisclicked} />
                 </div>
               )}
@@ -185,7 +185,7 @@ useEffect(()=>{
           )}
           
 
-          <div className="right   flex-1 w-full bg-amber-400 ">
+          <div className="right   flex-1 w-full mb-10 overflow-hidden ">
             {ispending ? <Loader /> : (socket && (
               <Message
                 socket={socket}

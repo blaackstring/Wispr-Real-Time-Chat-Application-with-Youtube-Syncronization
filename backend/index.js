@@ -9,7 +9,7 @@ import messageroute from './Routes/messageRoutes.js';
 import UserRouter from './Routes/userRoutes.js';
 import Verifyrouter from './Routes/verifyRoutes.js';
 import {  server, app } from './Socket.io/Socket.js';
-import sendUrlRoute from './Routes/sendUrlRoute.js';
+// import sendUrlRoute from './Routes/sendUrlRoute.js';
 import path from 'path';
 
 dotenv.config({ path: '../.env' });
@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 // CORS Configuration
 app.use(cors({
-    origin: process.env.ORIGIN || "http://localhost:5173",
+    origin: [process.env.ORIGIN || "http://localhost:5173"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -44,7 +44,7 @@ DbConnect().then(() => {
     app.use('/api/messages', messageroute);
     app.use('/api/search', UserRouter);
     app.use('/api/verify', Verifyrouter);
-    app.use('/api/watchparty', sendUrlRoute);
+   
 
     // Serve Frontend (Move this to the bottom)
     const __dirname = path.resolve();

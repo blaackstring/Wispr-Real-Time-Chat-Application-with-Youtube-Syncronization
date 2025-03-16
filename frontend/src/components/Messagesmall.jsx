@@ -16,16 +16,16 @@ function Messagesmall({ socket }) {
   const [isLoading, setisLoading] = useState(false);
   const dispatch = useDispatch();
   const selector = useSelector((state) => state.user);
-  const grabuser=useRef()
-  
-    useEffect(()=>{
-  grabuser.current=userstate
-  grabuser.current=userstate.user?._id
-  console.log(grabuser.current);
-  
-    },[userstate])
+  const grabuser = useRef()
 
-  
+  useEffect(() => {
+    grabuser.current = userstate
+    grabuser.current = userstate.user?._id
+    console.log(grabuser.current);
+
+  }, [userstate])
+
+
 
   useEffect(() => {
     scrollToBottom();
@@ -33,22 +33,23 @@ function Messagesmall({ socket }) {
 
   useEffect(() => {
     if (!socket) return;
-     socket.on("New_Message", (msg) => {
-          console.log( grabuser.current);
-          console.log(msg.senderid.toString());
-          if (msg.senderid.toString() == grabuser.current){
-            let audio = new Audio(sound);
-            audio.play();
-            console.log(msg);
-            setallmsg((prev) => [...prev, msg]);
-            setTimeout(() => ref.current?.scrollIntoView({ behavior: "smooth" }), 100);}
-          
-        });
-        
+    socket.on("New_Message", (msg) => {
+      console.log(grabuser.current);
+      console.log(msg.senderid.toString());
+      if (msg.senderid.toString() == grabuser.current) {
+        let audio = new Audio(sound);
+        audio.play();
+        console.log(msg);
+        setallmsg((prev) => [...prev, msg]);
+        setTimeout(() => ref.current?.scrollIntoView({ behavior: "smooth" }), 100);
+      }
+
+    });
+
     socket.on("getOnlineUsers", (Users) => {
       setOnlineUsers(Users);
     });
-  },[socket]);
+  }, [socket]);
 
   useEffect(() => {
     setallmsg(userstate.Messages || []);
@@ -91,7 +92,7 @@ function Messagesmall({ socket }) {
         <div className="flex items-center  p-2">
           {userstate?.user?.ProfilePic && (
             <img
-              src={userstate?.user?.ProfilePic||''}
+              src={userstate?.user?.ProfilePic || ''}
               alt="Profile"
               className="w-7 h-7 rounded-full bg-blue-200 mr-3"
             />
@@ -108,32 +109,30 @@ function Messagesmall({ socket }) {
 
         {/* Messages */}
         <div className="msgcontent flex flex-col max-h-[55vh] lg:h-[46vh] h-[27vh]  sm:h-[25vh] overflow-x-hidden p-1 overflow-y-auto">
-            {allmsg?.length > 0 &&
-              allmsg?.map((msg) => (
-                <div className="w-full h-full " key={msg._id}>
-                  <div
-                    className={`w-full  p-1 flex items-center mt-2  text-l ${
-                      selector.userid === msg.senderid
-                        ? "justify-end"
-                        : "justify-start"
+          {allmsg?.length > 0 &&
+            allmsg?.map((msg) => (
+              <div className="w-full h-full " key={msg._id}>
+                <div
+                  className={`w-full  p-1 flex items-center mt-2  text-l ${selector.userid === msg.senderid
+                      ? "justify-end"
+                      : "justify-start"
                     }`}
-                  >
-                    <div
-                      className={` p-3 text-white flex flex-col justify-center items-center rounded-[20%] ${
-                        selector.userid === msg.senderid
-                          ? "bg-blue-400"
-                          : "bg-green-400"
+                >
+                  <div
+                    className={` p-3 text-white flex flex-col justify-center items-center rounded-[20%] ${selector.userid === msg.senderid
+                        ? "bg-blue-400"
+                        : "bg-green-400"
                       }`}
-                    >
-                      {msg.messageContent}
-                    </div>
+                  >
+                    {msg.messageContent}
                   </div>
                 </div>
-              ))}
+              </div>
+            ))}
 
-     
-            <div ref={ref}></div>
-          </div>
+
+          <div ref={ref}></div>
+        </div>
 
         {/* Input Field */}
         <div className="p-2 bg-[#2b3237] h-fit flex-row ">

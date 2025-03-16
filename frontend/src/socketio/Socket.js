@@ -1,12 +1,12 @@
 import { io } from "socket.io-client";
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";  //here chnage
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "";  //here chnage
 
 
 let sockets = null; // 
 
 export const connectSocket = (userId) => {
     if (!sockets) {  // ✅ Prevent duplicate connections
-        sockets = io("https://wispr-chatapp.onrender.com", {
+        sockets = io("http://localhost:3000", {
             query: { userId },
             autoConnect: true,
             reconnection: true,

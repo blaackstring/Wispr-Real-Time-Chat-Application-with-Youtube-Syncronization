@@ -1,12 +1,9 @@
 import React, { useEffect, useRef } from "react";
-import { playorpaused, seeked, sendurl } from "@/Controllers/watchPartyController.js";
 import { useSelector } from "react-redux";
 import './watchparty.css';
 import Messagesmall from "./Messagesmall";
-
 import { toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { data } from "react-router-dom";
 
 function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
   const urlRef = useRef("");
@@ -49,43 +46,41 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
 
   useEffect(() => {
     const syncVideoState = (data) => {
-      if(data.senderid===idRef.current){ 
       console.log("Syncing play/pause:", data);
-      isPlayingRef.current = data.isPlayed;
+      isPlayingRef.current = data
       togglePlayPause();
-    }
     };
 
 
     const syncSeek = (data) => {
+      console.log(data,"from seek");
+      
       if (!idRef.current) return;
-      if(data.senderid===idRef.current){ 
       isExternalSeek.current = true;
+      
       syncplaying.current=true;
-      playerRef.current.seekTo(data.seekTo,true);
+      playerRef.current.seekTo(data,true);
       setTimeout(() => {
           isExternalSeek.current = false;
           syncplaying.current=false;
-          playerRef.current.playVideo()
+          if (!isPlayingRef.current) playerRef.current.playVideo();
       }, 1000);
-    }
   };
 
     const syncUrl = (data) =>{
-   if(String(data.senderid) === String(idRef.current))  
        { 
-         const videoId = extractVideoId(data.url);
+         const videoId = extractVideoId(data);
          senderUrlDataIdRef.current = videoId;
+         console.log("videoId",videoId);
+         
          createPlayer(videoId);
-        }
-      else{
-       socket.emit("isUserBusy", true);
-      }
    };
+
+  }
     socket.on("isUserBusy", (data) => {
       console.log("Received 'isUserBusy':",data);
       if (data) {
-        toast.warn('🦄 Login SuccessFull!', {
+        toast('😒User is Busy!', {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -98,24 +93,16 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
           });
       }
     });
-    socket.on("play_pause", syncVideoState);
-    socket.on("seek", syncSeek);
-    socket.on("send_url", syncUrl);
+    socket.on("update_state", syncVideoState);
+    socket.on("update_seek", syncSeek);
+    socket.on("receive_url", syncUrl);
 
     return () => {
-      socket.off("isUserBusy", (data) => {
-        if (data) {
-          toast.warn('User is busy!', {
-            position: "top-right",
-            autoClose: 5000,
-            theme: "dark"
-          });
-        }
-      });
-      socket.off("play_pause", syncVideoState);
-      socket.off("seek", syncSeek);
-      socket.off("send_url", syncUrl);
-    };
+      socket.off("update_state");
+      socket.off("update_seek");
+      socket.off("receive_url");
+  };
+  
   }, [socket,selector]);
 
   const extractVideoId = (url) => {
@@ -123,23 +110,23 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
     );
     return match ? match[1] : "";
-  };
+};
 
   const handleInputChange = (e) => {
     urlRef.current = e.target.value;
   };
 
-  const handleEvent = async (isPlaying) => {
-    if (!idRef.current) return;
-    await playorpaused(isPlaying, idRef.current,userRef.current);
-  };
 
   const handleForm = async (e) => {
     e.preventDefault();
     if (!urlRef.current) return;
-
     try {
-      const res = await sendurl(urlRef.current, idRef.current,userRef.current);
+      console.log(urlRef.current);
+      const vdourl=urlRef.current
+      socket.emit("send_url", {
+        userId: userRef.current,
+        targetId: idRef.current,
+        vdourl });
       const videoId = extractVideoId(urlRef.current);
       senderUrlDataIdRef.current = videoId;
       urlRef.current = "";
@@ -156,7 +143,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       return;
     }
 
-    if (playerRef.current) {
+    if (playerRef.current!=null) {
       playerRef.current.loadVideoById(videoId);
     } else {
       playerRef.current = new window.YT.Player("youtube-player", {
@@ -170,22 +157,21 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
             console.log("Player Ready");
              event.target.playVideo();
           },
-          onStateChange: async (event) => {
+          onStateChange: (event) => {
             if (!idRef.current) return;
             if (event.data === YT.PlayerState.BUFFERING) {
               if (isExternalSeek.current) return;
               let seekTime = playerRef.current.getCurrentTime();
-                await  seeked(seekTime, idRef.current,userRef.current);
+              socket.emit("seek", { userId: userRef.current,targetId:idRef.current, timestamp: seekTime });
                
             }
 
             if (event.data === 1) {
               if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true)
-                  await handleEvent(true);
+                socket.emit("play_pause", {  userId: userRef.current,targetId:idRef.current, state:true });
             } else if (event.data === 2) {
               if (event.data !== YT.PlayerState.BUFFERING&&syncplaying!==true&&isPlayingRef.current==true)
-              await handleEvent(false);
-
+                socket.emit("play_pause", {  userId: userRef.current,targetId:idRef.current, state:false });
             
             } 
           },
@@ -222,7 +208,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
       <nav className="w-[95vw] h-10 lg:h-14 flex pl-3 pt-2 items-center">
         <div className="w-full  flex justify-start items-center mt-2">
           <div className="text-[#E50914] text-[30px] lg:text-4xl font-extrabold mb-3 shadow-">
-            Watch-Party
+            Watch-2Gether
           </div>
         </div>
         <button
