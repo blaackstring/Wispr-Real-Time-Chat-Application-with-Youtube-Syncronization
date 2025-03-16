@@ -27,8 +27,5 @@
     "nodemon": "^3.1.9",
     "path": "^0.12.7",
     "socket.io": "^4.8.1"
-  },
-  "devDependencies": {
-    "sass-embedded": "^1.85.1"
   }
 }
