@@ -3,6 +3,7 @@ import {login ,logout,signup} from "../Controller/authController.js"
 import fileUpload from "../Controller/cloudiniryController.js";
 import multer from "multer";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import path from 'path';
 
 const router=express.Router();
 
