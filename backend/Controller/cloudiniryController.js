@@ -9,7 +9,7 @@ const fileUpload=async(req,res)=>{
 try {
    const filepath=req.file.path;
    const uploadfile=await cloudinary.uploader.upload(filepath,{
-    folder:'/uploads'
+    folder:'uploads'
    })
 
    try {
