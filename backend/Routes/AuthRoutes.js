@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
       console.log(file,'shahan')
-      cb(null, `${req.fieldname}-${Date.now()}`); // Rename file with timestamp
+      cb(null, `${file.fieldname}-${Date.now()}`); // Rename file with timestamp
     }
   });
   
