@@ -8,14 +8,15 @@ const router=express.Router();
 
 //multer 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/'); // Store files in 'uploads' directory
-    },
-    filename: (req, file, cb) => {
-      console.log(file,'shahan')
-      cb(null, `${file.fieldname}-${Date.now()}`); // Rename file with timestamp
-    }
-  });
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, 'uploads'); // Ensures correct path
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    console.log(file, 'shahan'); // Debugging
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
+  }
+});
   
   const upload = multer({ 
     storage: storage, 
