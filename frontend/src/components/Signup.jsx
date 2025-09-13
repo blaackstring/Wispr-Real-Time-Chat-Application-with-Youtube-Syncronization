@@ -60,9 +60,9 @@ const handleSubmit = async (e) => {
 };
 
     return <>
-     <div className="lg:w-[38vw] sm:w-[55vw] h-fit p-2 mb-10 flex items-center justify-center backdrop:blur-3xl  bg-white/20 rounded-2xl">
+     <div className="lg:w-[38vw] sm:w-[55vw] h-fit p-2  flex items-center justify-center backdrop:blur-3xl  bg-white/20 rounded-2xl">
         <div className=" w-90 bg-white/40 p-3 rounded-lg shadow-lg h-full flex flex-col items-center justify-around">
-                 <img src={addImg} alt="" className='w-[100px] h-[100px] '/>
+                 <img src={addImg} alt="" className='w-[60px] h-[60px] '/>
           <form action="" onSubmit={handleSubmit} className=" flex items-center flex-col justify-center">
 
           <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded-2xl bg-white" placeholder="Email" name="email" label="Email" />
@@ -71,10 +71,10 @@ const handleSubmit = async (e) => {
           <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded-2xl bg-white" placeholder="username" name="username" label="username" />
             <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded-2xl bg-white" placeholder="fullname" name="fullname"  label="fullname"/>
             <label htmlFor="" className="w-full ml-2">Gender:</label>
-       <div className="flex flex-row w-70 rounded-xl items-baseline h-10 mb-10 justify-center bg-white ">
-       <Input type="radio" onChange={handleinputchange} value="male" name="gender" label="male" />
+       <div className="flex flex-row w-70 rounded-xl items-baseline h-10 mb-10 i justify-center bg-white ">
+       <Input type="radio" classname="m-2 text-center" onChange={handleinputchange} value="male" name="gender" label="male" />
   
-       <Input type="radio"  onChange={handleinputchange} value='female'name="gender" label="female" />
+       <Input type="radio" classname="m-2 text-center"  onChange={handleinputchange} value='female'name="gender" label="female" />
        </div> 
      
       <Buttons name="Signup " className=' mt-[-20px] w-full'/>

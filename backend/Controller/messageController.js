@@ -24,7 +24,7 @@ let chat=await ConversationModel.findOne({
         messageContent:message,
         conversationid:chat._id
     })
-console.log(newmsg);
+
 
     if(newmsg){
         chat.messages.push(newmsg._id);

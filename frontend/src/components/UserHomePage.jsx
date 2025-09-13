@@ -111,39 +111,47 @@ useEffect(()=>{
     <>
       <div className={`userhome flex   justify-between flex-col w-[100vw] sm:w-full lg:w-[80vw]   lg:h-[87vh] h-screen border-blue-400 shadow-[0_0_5px_5px_rgba(59,130,246,0.5)] ${iswatchparty ? 'hidden' : 'block'}`}>
 
-        <nav className="h-[9vh] flex justify-evenly  items-center bg-black/20 p-2">
-          <InputShad setSearchUser={setSearchUser} ref={ref} />
-          {SearchUser?.length > 0 && (
-                <div className="w-fit ml-2 h-fit rounded-2xl hover:bg-blue-600  bg-white">
-                  <ArrowBigLeftDashIcon
-                    className="  w-8 h-8 rounded-2xl cursor-pointer"
-                    onClick={handleAllUser}
-                  />
-                </div>
-              )}
+    <nav className="h-[9vh] flex items-center justify-between bg-black/20 p-2">
+  {/* Search Input */}
+  <InputShad setSearchUser={setSearchUser} ref={ref} />
 
+  {/* Clear Search Button */}
+  {SearchUser?.length > 0 && (
+    <div className="ml-2 rounded-2xl bg-white hover:bg-blue-600">
+      <ArrowBigLeftDashIcon
+        className="w-8 h-8 cursor-pointer rounded-2xl"
+        onClick={handleAllUser}
+      />
+    </div>
+  )}
 
-          <div className="w-full h-full flex items-center justify-end">
-            {selector.isloggedin && (
-              <div className="w-4 h-4 flex items m-2">
-                <img src={icon} alt="icon" />
-              </div>
-            )}
-            {selector.ProfilePic && (
-              <img
-                src={selector?.ProfilePic}
-                alt="pic"
-                className="w-12 h-12 rounded-[50%] bg-blue-200 mr-5"
-                onClick={userimghandler}
-              />
-            )}
-          </div>
+  {/* Profile Section */}
+  <div className="flex items-center ml-auto gap-3">
+    {selector.isloggedin && (
+      <div className="w-4 h-4 flex items-center m-2">
+        <img src={icon} alt="icon" />
+      </div>
+    )}
 
+    {selector.ProfilePic && (
+      <img
+        src={selector?.ProfilePic}
+        alt="profile"
+        className="w-12 h-12 rounded-full bg-blue-200 cursor-pointer mr-5"
+        onClick={userimghandler}
+      />
+    )}
 
-          <div>
-            <button className="bg-black w-18 text-l text-white rounded-2xl hover:cursor-pointer hover:bg-white hover:text-white p-2 inset-ring-4 inset-ring-blue-500" onClick={()=>handleLogout()}>LogOut</button>
-          </div>
-        </nav>
+    {/* Logout Button */}
+    <button
+      className="bg-black text-white text-lg rounded-2xl p-2 hover:bg-white hover:text-black ring-2 ring-blue-500"
+      onClick={handleLogout}
+    >
+      LogOut
+    </button>
+  </div>
+</nav>
+
 
         <div className="flex  flex-1  p-1 justify-center h-[65vh] items-stretch relative top-1">
           {(isclicked || width > 900) && (

@@ -5,7 +5,7 @@ import { userClicked } from '@/store/UserClickedSlice.js';
 import { Recievemsg } from '@/Controllers/MessageController';
 import Loader from './Loader.jsx';
 
-function RecentUser({setisclicked}) {
+function RecentUser({setisclicked,}) {
   const RecentUsers = useSelector((state) => state.RecentSlice.recentUsers);//it is an array of all chatted users
   const OnlineUsers = useSelector((state) => state.OnlineUsers);
   console.log(OnlineUsers);
@@ -50,9 +50,9 @@ function RecentUser({setisclicked}) {
       { OnlineUsers?.includes(recent._id) ?(
                   <span className="text-green-400 ml-2 text-sm">🟢</span>
                 ) : (
-                  <span className="text-xs text-red-400">🔴</span>
+                  <span className="text-xs text-red-400 mr-4">🔴</span>
                 )}
-              <span className='mt-1 mb-1 '> {recent.fullname}</span>
+              <span className='uppercase w-full min-w-[10vw] inline-block'> {recent.fullname}</span>
               <div className='flex justify-end items-center w-full'>
           
               </div>

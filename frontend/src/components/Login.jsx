@@ -75,7 +75,7 @@ const handleinputchange=(e)=>{
 }
 
     return (
-      <div className="lg:w-[55vw] sm:w-[90vw]  lg:h-[80vh] h-[50vh] w-[95vw] p-2 flex items-center justify-center backdrop:blur-3xl   bg-white/20 rounded-2xl">
+      <div className="lg:w-[45vw] sm:w-[90vw]  lg:h-[60vh] h-[50vh] w-[95vw] p-2 flex items-center justify-center backdrop:blur-3xl   bg-white/20 rounded-2xl">
         <div className="   bg-white/40 p-3 lg:w-[35vw] rounded-lg shadow-lg lg:h-[45vh] flex flex-col items-center justify-around">
                  <img src={loginImg} alt="" className='w-[100px] h-[100px] '/>
           <form action="" onSubmit={handleSubmit} className="flex items-center flex-col">
