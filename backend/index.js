@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 // CORS Configuration
 app.use(cors({
-    origin: [process.env.ORIGIN || "http://localhost:5173"],
+    origin: [process.env.ORIGIN || "http://localhost:5173" || "https://wispr-frontend-vercel.vercel.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
