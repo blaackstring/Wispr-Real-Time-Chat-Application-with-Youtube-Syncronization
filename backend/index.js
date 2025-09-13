@@ -28,12 +28,35 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser()); 
 
 // CORS Configuration
+
+
+
+
+const allowedOrigins = [
+    process.env.ORIGIN,
+    "http://localhost:5173",
+    "https://wispr-frontend-vercel.vercel.app"
+];
+
 app.use(cors({
-    origin: [process.env.ORIGIN || "http://localhost:5173" || "https://wispr-frontend-vercel.vercel.app"],
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+// app.use(cors({
+//     origin: [process.env.ORIGIN || "http://localhost:5173" || "https://wispr-frontend-vercel.vercel.app"],
+//     credentials: true,
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+// }));
 
 // Database Connection
 DbConnect().then(() => {
