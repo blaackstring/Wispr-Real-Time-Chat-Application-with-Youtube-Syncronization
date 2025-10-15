@@ -4,6 +4,7 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AuthLogout, verifyUser } from "./store/slice";
 import { LogoutController } from "./Controllers/authController";
 import { setRecentUsers } from "./store/userslice";
+import BG from "./components/ui/BG/BG";
 
 function App() {
   const location = useLocation();
@@ -48,65 +49,20 @@ function App() {
   const mouseY = mousePosition.y / (window.innerHeight || 1);
 
   return (
-    <div className="w-full min-h-screen relative overflow-x-hidden">
-      {/* Enhanced Background */}
-      <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Moving gradient orbs */}
-          <div 
-            className="absolute w-96 h-96 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-full blur-3xl animate-pulse"
-            style={{
-              transform: `translate(${mouseX * 100 - 50}px, ${mouseY * 100 - 50}px)`,
-              left: '10%',
-              top: '10%',
-            }}
-          />
-          <div 
-            className="absolute w-80 h-80 bg-gradient-to-r from-pink-500/30 to-cyan-500/30 rounded-full blur-3xl animate-pulse"
-            style={{
-              transform: `translate(${mouseX * -80 + 40}px, ${mouseY * -80 + 40}px)`,
-              right: '10%',
-              bottom: '10%',
-              animationDelay: '2s',
-            }}
-          />
-          <div 
-            className="absolute w-64 h-64 bg-gradient-to-r from-yellow-400/30 to-orange-500/30 rounded-full blur-3xl animate-pulse"
-            style={{
-              transform: `translate(${mouseX * 60 - 30}px, ${mouseY * 60 - 30}px)`,
-              left: '50%',
-              top: '50%',
-              animationDelay: '4s',
-            }}
-          />
-        </div>
-
-        {/* Subtle grid pattern */}
-        <div 
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: `
-              linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-            `,
-            backgroundSize: '50px 50px',
-            transform: `translate(${mouseX * 20}px, ${mouseY * 20}px)`,
-          }}
-        />
-      </div>
+    <div className="w-full min-h-screen relative overflow-x-hidden bg-gradient-to-br from-black/99 via-slate-900/90 to-gray-900">
+   
 
       {/* Enhanced Navbar - Only show when NOT logged in */}
       <div className="w-screen flex top-4 justify-center absolute z-50">
         {!loginornot && (
           <nav 
             className={`
-              min-w-[50%] flex justify-around items-center 
+              min-w-[50%] flex justify-around items-center border-1
               ${isScrolled 
-                ? 'backdrop-blur-xl bg-white/20 border border-white/30' 
-                : 'backdrop-blur-md bg-white/10 border border-white/20'
+                ? 'backdrop-blur-xl bg-white/90 border border-white/40' 
+                : 'backdrop-blur-md bg-white/5 border border-white/10'
               }
-              rounded-2xl lg:text-xl font-bold px-8 py-4
+              rounded-2xl lg:text-xl font-bold px-4 py-1
               transition-all duration-500 ease-out shadow-2xl
             `}
             style={{
@@ -118,11 +74,12 @@ function App() {
             {/* Logo/Brand */}
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg">W</span>
+                <span className="text-white font-bold text-2xl">🎥</span>
               </div>
-              <span className="font-bold text-xl bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                WISPR
-              </span>
+           <h1 className="text-2xl md:text-2xl text-white font-bold drop-shadow-lg">
+          Tube<span className="text-purple-400">2</span>Gether
+        </h1>
+   
             </div>
 
             {/* Navigation Links */}
@@ -183,58 +140,7 @@ function App() {
         <Outlet />
       </div>
 
-      {/* Floating particles for ambiance */}
-      <div className="fixed inset-0 pointer-events-none z-5">
-        {[...Array(12)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-white/40 rounded-full animate-float"
-            style={{
-              left: `${10 + (i * 7)}%`,
-              top: `${15 + (i * 6)}%`,
-              animationDelay: `${i * 0.8}s`,
-              animationDuration: `${6 + Math.random() * 4}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Custom CSS for animations */}
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px) rotate(0deg);
-            opacity: 0.4;
-          }
-          50% {
-            transform: translateY(-30px) rotate(180deg);
-            opacity: 0.8;
-          }
-        }
-
-        .animate-float {
-          animation: float 8s ease-in-out infinite;
-        }
-
-        /* Enhanced scrollbar */
-        ::-webkit-scrollbar {
-          width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-          background: rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-          background: linear-gradient(45deg, #3b82f6, #8b5cf6);
-          border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(45deg, #2563eb, #7c3aed);
-        }
-      `}</style>
+  
     </div>
   );
 }

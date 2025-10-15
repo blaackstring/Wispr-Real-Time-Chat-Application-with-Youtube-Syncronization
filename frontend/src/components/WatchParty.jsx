@@ -77,7 +77,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
    };
 
   }
-    socket.on("isUserBusy", (data) => {
+    socket?.on("isUserBusy", (data) => {
       console.log("Received 'isUserBusy':",data);
       if (data) {
         toast('😒User is Busy!', {
@@ -93,13 +93,13 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
           });
       }
     });
-    socket.on("update_state", syncVideoState);
-    socket.on("update_seek", syncSeek);
-    socket.on("receive_url", syncUrl);
+    socket?.on("update_state", syncVideoState);
+    socket?.on("update_seek", syncSeek);
+    socket?.on("receive_url", syncUrl);
 
     return () => {
-      socket.off("update_state");
-      socket.off("update_seek");
+      socket?.off("update_state");
+      socket?.off("update_seek");
       socket.off("receive_url");
   };
   
@@ -207,7 +207,7 @@ function WatchParty({ setiswatchparty, socket, OnlineUsers }) {
     <div className="wdiv min-h-[100vh] w-[100vw]  overflow-hidden sm:h-[100vh] relative ">
       <nav className="w-[95vw] h-10 lg:h-14 flex pl-3 pt-2 items-center">
         <div className="w-full  flex justify-start items-center mt-2">
-          <div className="text-[#E50914] text-[30px] lg:text-4xl font-extrabold mb-3 shadow-">
+          <div className="text-[#b4151d] text-[30px] lg:text-4xl tracking-wider font-extrabold mb-3 shadow-">
             Watch-2Gether
           </div>
         </div>

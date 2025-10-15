@@ -57,7 +57,7 @@ const dispatch=useDispatch()
      setisLoading(false)
      
     }else{
-      toast("Forget to 😅😅 Enter Email or Password ")
+      toast(" Enter Email or Password ")
     }
         
       } catch (error) {
@@ -75,13 +75,17 @@ const handleinputchange=(e)=>{
 }
 
     return (
-      <div className="lg:w-[45vw] sm:w-[90vw]  lg:h-[60vh] h-[50vh] w-[95vw] p-2 flex items-center justify-center backdrop:blur-3xl   bg-white/20 rounded-2xl">
-        <div className="   bg-white/40 p-3 lg:w-[35vw] rounded-lg shadow-lg lg:h-[45vh] flex flex-col items-center justify-around">
+      <div className="lg:w-[45vw]  sm:w-[90vw]  lg:h-[60vh] h-[50vh] w-[95vw] p-2 flex items-center justify-center backdrop:blur-3xl    rounded-2xl">
+        <div className="   bg-white/40 p-3 lg:w-[25vw] rounded-r-lg shadow-lg lg:h-[57vh] flex flex-col items-center justify-around">
                  <img src={loginImg} alt="" className='w-[100px] h-[100px] '/>
           <form action="" onSubmit={handleSubmit} className="flex items-center flex-col">
 
-          <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded-2xl bg-white" placeholder="Email" name="email" label="Email"  />
-            <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded-2xl bg-white" placeholder="Password" name="password" type="password" label="Password"/>
+          <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded bg-white" placeholder="Email" name="email" label="Email"  />
+            <Input   onChange={handleinputchange} classname="w-full p-2 border-2 rounded bg-white" placeholder="Password" name="password" type="password" label="Password"/>
+            <div className="flex justify-start px-2 w-full mt-2 ">
+              <div className="flex items-center justify-start">
+              <input type='checkbox' className="mr-2" /><span className="text-white mr-2">Remember Me</span>
+              </div></div>
           <Buttons className=" w-full-[-30px]"/>
           </form>
        
